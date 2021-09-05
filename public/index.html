@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type=text/css>
+        body {
+            background-color: rgb(0, 255, 0);
+        }
+
+        .chat {
+            color: rgb(255, 255, 255);
+            font-weight: 900;
+            font-size: 75px;
+            font-family: "Segoe UI Emoji", "MS P ゴシック";
+            position: absolute;
+            animation: commentMove 5s linear;
+        }
+
+        @keyframes commentMove {
+            0% {
+                left: 100%;
+                transform: translateX(100%);
+            }
+            100% {
+                left: 0%;
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="placeholder"></div>
+    <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        let socket = io();
+        let rowNumber = 0;
+        let getNumber = 0;
+
+        let itemHeight = 100;
+        let slot = [0, 0, 0, 0, 0];
+
+        // 接続時の処理
+        socket.on('connect', () => {
+            console.log("socket.ioに接続しました");
+        });
+
+        // サーバーからのメッセージ拡散に対する処理
+        socket.on('spread message', (strMessage) => {
+            console.log(`spread message:${strMessage}`);
+
+            // OPENRECのコメントがスタンプの場合は処理しない
+            if(strMessage.length == 0) return;
+
+            createMoveComment(strMessage);
+        });
+
+        setInterval(updateTimeLimit, 5000);
+
+
+        function createMoveComment(comment) {
+            for (let c = 0; c < slot.length; c++) slot[c] = 0;
+
+            // 繰り返して指定した関数を実行する
+            $('#placeholder').children().each((index, comment) => {
+                let y = parseFloat($(comment).css("top"));
+                let x = parseFloat($(comment).css("left"));
+
+                let idx = Math.round(y/itemHeight);
+                let right = $(comment).data("width") + x;
+
+                // ここで配列slotの1部分が変わる
+                slot[idx] = Math.max(slot[idx], right);
+            });
+
+            let minRight = Number.MAX_VALUE;
+            let minSlot = 0;
+
+            for (let c = 0; c < slot.length; c++) {
+                if(slot[c] < minRight) {
+                    minRight = slot[c];
+                    minSlot = c;
+                }
+            }
+
+            let wrapper = $('<div data-timelimit="30">');
+            let message = $("<span>");
+            
+            // wrapperにID:chatを付加
+            wrapper.attr("class", "chat");
+            message.attr("class", "comment");
+
+            //message_inner.text(comment);
+            message.text(comment);
+            wrapper.append(message);
+
+            // CSSを付与
+            wrapper.css("top", itemHeight * minSlot);
+            //wrapper.css("left", Math.max($(window).innerWidth(), minRight));
+
+            // placeholderにwrapperを追加
+            $('#placeholder').append(wrapper);
+            $(wrapper).data("width", wrapper.width());
+        }
+
+        function updateTimeLimit() {
+            // placeholder要素内の全ての子要素に対して以下の操作を行う
+            $(placeholder).children().each((index, i) => {
+                let l = $(i).attr("data-timelimit");
+                console.log(l);
+                if(l == 30) $(i).attr("data-timelimit", "15");
+                else if(l == 15) $(i).attr("data-timelimit", "0");
+                if(l == 0) $(i).remove();
+            });
+        }
+    </script>
+</body>
+</html>

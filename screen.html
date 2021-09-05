@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="jquery-3.6.0.min.js"></script>
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        .chat {
+            font-size: 40px;
+            font-family: "Segoe UI Emoji", "MS P ゴシック";
+            position: absolute;
+            overflow: visible;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .chat div {
+            display: inline-block;
+            line-height: 64px;
+            overflow: visible;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .chat img {
+            float: left;
+            display: inline-block;
+            width: 64px;
+            height: 64px;
+            margin-right: 10px;
+            border-radius: 20%;
+        }
+    </style>
+
+<body>
+    <!-- placeholder は実際の内容を後から挿入する為に、取り敢えず仮に確保した場所 -->
+    <div id="placeholder"></div>
+
+    <!-- HTML5以降では script type="text/javascript" とする必要はない-->
+    <script type="text/javascript">
+        var itemHeight = 100;
+        // slot要素はDOMの外側から内容を埋め込む為に使うもの
+        var slot = [0, 0, 0, 0, 0];
+
+        function createComment(i) {
+
+            // slot配列要素の全てを0にする為にこのコードを書いている？
+            for (var c = 0; c < slot.length; c++) slot[c] = 0;
+            // each関数の第一引数は各要素のインデックス番号
+            $(placeholder).children().each((index, i) => {
+                // parseFloat関数は文字列を浮動小数店に変換した値を返す
+                // css("top")は上からの距離を表す　css("left")は左からの距離
+                var y = parseFloat($(i).css("top"));
+                var x = parseFloat($(i).css("left"));
+                // Math.round関数は引数として与えた数を四捨五入して、最も近似の整数を返す
+                var idx = Math.round(y / itemHeight);
+                // data()セレクタで$(i).data("width")を選ぶ 今widthがない場合新規に作成する
+                var right = $(i).data("width") + x;
+                // 引数の内最大の値を返す
+                slot[idx] = Math.max(slot[idx], right);
+            });
+            // Number.MAX_VALUEは最大の値
+            var minRight = Number.MAX_VALUE;
+            var minSlot = 0;
+            // minSlotに配列slotの最小の値を代入する
+            for (var c = 0; c < slot.length; c++) {
+                if (slot[c] < minSlot) {
+                    minRight = slot[c];
+                    minSlot = c;
+                }
+            }
+
+            var wrapper = $("<div>");
+            // アイコンを置きたい場合
+            var img = $("<img>");
+            var message = $("<div>");
+            var message_inner = $("<span>");
+            // attr関数でID属性を取得・変更
+            wrapper.attr("class", "chat");
+            // アイコンを置きたい場合
+            img.attr("src", i.user.img);
+            message_inner.text(i.message);
+            message.text(i.message);
+            wrapper.append(img);
+            wrapper.append(message);
+
+            wrapper.css("top", itemHeight * minSlot);
+            wrapper.css("left", Math.max($(window).innerWidth(), minRight));
+            $(placeholder).append(wrapper);
+            $(wrapper).data("width", wrapper.width());
+        }
+
+        function updateFrame() {
+            // placeholder要素内の全ての子要素に対して以下の操作を行う
+            $(placeholder).children().each((index, i) => {
+                let l = parseFloat($(i).css("left"));
+                l -= 5;
+                // コメントを移動させる？
+                $(i).css("left", l)
+                // 流れているコメント部分の長さ 変更した
+                let w = $(i).data("width");
+                // if部分は文字が移動した分で消える方法
+                // 画面の左端にコメントの右端がくっついていると考えた時にlがその値より小さくなっていると画面外であるので削除
+                if (l < -w) {
+                    // remove()関数は要素を削除する
+                    $(i).remove();
+                }
+            });
+        }
+
+        // JQueryにおける関数の書き方
+        $(() => {
+            setInterval(updateFrame, 30);
+            setInterval(() => {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://localhost:655000/peek");
+                xhr.addEventListener("load", () => {
+                    if (xhr.responseText.length == 0) return;
+                    console.log(xhr.responseText);
+                    xhr.responseText.split("\r\n").forEach((i) => {
+                        if (i.length == 0) return;
+                        console.log(JSON.parse(i))
+                        createComment(JSON.parse(i))
+                    });
+                });
+                xhr.send();
+            }, 250);
+        });
+    </script>
+
+</body>
+</head>
+
+</html>

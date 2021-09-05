@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type=text/css>
+
+
+.chat {
+    color: rgb(255, 255, 255);
+    font-weight: 900;
+    font-size: 100px;
+    font-family: "Segoe UI Emoji", "MS P ゴシック";
+    -webkit-text-stroke: 2px #000;
+    position: relative;
+
+}
+
+
+        @keyframes commentMove {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(0%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="placeholder"></div>
+    <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        let socket = io();
+        let rowNumber = 0;
+        let getNumber = 0;
+
+        let itemHeight = 100;
+        let slot = [0, 0, 0, 0, 0];
+
+        // 接続時の処理
+        socket.on('connect', () => {
+            console.log("socket.ioに接続しました");
+        });
+
+        // サーバーからのメッセージ拡散に対する処理
+        socket.on('spread message', (strMessage) => {
+            console.log(`spread message:${strMessage}`);
+
+            // OPENRECのコメントがスタンプの場合は処理しない
+            if(strMessage.length == 0) return;
+
+            createMoveComment(strMessage);
+
+
+
+            /*
+            // 拡散されたメッセージをHTMLに追加
+            $('#placeholder').append($(`<div id="comment-${rowNumber}">`).text(strMessage));
+            getNumber = rowNumber;
+            rowNumber += 1;
+            if(rowNumber > 9) rowNumber = 0;
+
+            // 5病後にdiv要素内(id="placeholder")のdiv要素の一番上を削除
+            setTimeout(() => {
+                $('div > div').eq(0).remove();
+                rowNumber = getNumber;
+            }, 5000);
+            */
+        });
+
+        //setInterval(updateFrame, 10);
+
+        function createMoveComment(comment) {
+            for (let c = 0; c < slot.length; c++) slot[c] = 0;
+
+            // 繰り返して指定した関数を実行する
+            $('#placeholder').children().each((index, comment) => {
+                let y = parseFloat($(comment).css("top"));
+                let x = parseFloat($(comment).css("left"));
+
+                let idx = Math.round(y/itemHeight);
+                let right = $(comment).data("width") + x;
+
+                // ここで配列slotの1部分が変わる
+                slot[idx] = Math.max(slot[idx], right);
+            });
+
+            let minRight = Number.MAX_VALUE;
+            let minSlot = 0;
+
+            for (let c = 0; c < slot.length; c++) {
+                if(slot[c] < minRight) {
+                    minRight = slot[c];
+                    minSlot = c;
+                }
+            }
+
+            let wrapper = $("<div>");
+            let message = $("<span>");
+            
+            // wrapperにID:chatを付加
+            wrapper.attr("class", "chat");
+            message.attr("class", "comment");
+
+            //message_inner.text(comment);
+            message.text(comment);
+            wrapper.append(message);
+
+            // CSSを付与
+            wrapper.css("top", itemHeight * minSlot);
+            //wrapper.css("left", Math.max($(window).innerWidth(), minRight));
+
+            // placeholderにwrapperを追加
+            $('#placeholder').append(wrapper);
+            $(wrapper).data("width", wrapper.width());
+        }
+
+        function updateFrame() {
+            // placeholder要素内の全ての子要素に対して以下の操作を行う
+            $(placeholder).children().each((index, i) => {
+                let l = parseFloat($(i).css("left"));
+                let w = $(i).data("width");
+                if (l <= 5) {
+                    // remove()関数は要素を削除する
+                    $(i).remove();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
