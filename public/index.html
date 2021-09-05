@@ -21,7 +21,7 @@
                 transform: translateX(100%);
             }
             100% {
-                left: 0%;
+                left: -100%;
                 transform: translateX(-100%);
             }
         }
@@ -53,13 +53,16 @@
             // OPENRECのコメントがスタンプの場合は処理しない
             if(strMessage.length == 0) return;
 
+            // 流れるコメントの作成
             createMoveComment(strMessage);
         });
 
-        setInterval(updateTimeLimit, 5000);
+        // コメントを削除する関数の実行感覚
+        setInterval(updateTimeLimit, 2500);
 
 
         function createMoveComment(comment) {
+            // slot配列を0に初期化し直す
             for (let c = 0; c < slot.length; c++) slot[c] = 0;
 
             // 繰り返して指定した関数を実行する
@@ -84,7 +87,7 @@
                 }
             }
 
-            let wrapper = $('<div data-timelimit="30">');
+            let wrapper = $('<div data-timelimit="20">');
             let message = $("<span>");
             
             // wrapperにID:chatを付加
@@ -109,8 +112,7 @@
             $(placeholder).children().each((index, i) => {
                 let l = $(i).attr("data-timelimit");
                 console.log(l);
-                if(l == 30) $(i).attr("data-timelimit", "15");
-                else if(l == 15) $(i).attr("data-timelimit", "0");
+                $(i).attr("data-timelimit", `${l-10}`);
                 if(l == 0) $(i).remove();
             });
         }
