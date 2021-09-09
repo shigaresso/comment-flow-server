@@ -16,6 +16,7 @@
             font-size: 10vh;
             font-family: "Segoe UI Emoji", "MS P ゴシック";
             position: absolute;
+            will-change: left, transform;
             animation: commentMove 5s linear;
 
             /* これをつけることによって移動が終わっても画面から消えたところで固定される */
@@ -26,12 +27,12 @@
 
         @keyframes commentMove {
             0% {
-                margin-left: 100%;
+                left: 100%;
                 transform: translateX(100%);
             }
             100% {
-                margin-left: -100%;
-                transform: translateX(-100%);
+                left: 0%;
+                transform: translateX(-125%);
             }
         }
     </style>
@@ -46,6 +47,9 @@
         let socket = io();
 
         let itemHeight = 100;
+
+        // コメントの表示時間(単位：ms)
+        const commentDisplayTime = 5000;
         // コメント用の行の数
         let slot = [0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -66,7 +70,7 @@
         });
 
         // コメントを削除する関数の実行感覚
-        setInterval(updateTimeLimit, 2300);
+        setInterval(updateTimeLimit, 2500);
 
 
         function createMoveComment(comment) {
@@ -97,8 +101,8 @@
                     minSlot = c;
                 }
             }
-
-            let wrapper = $('<div data-timelimit="20">');
+            // コメントのDOMの作成時刻を持たせる
+            let wrapper = $(`<div data-timelimit=\"${Date.now()}\">`);
             let message = $("<span>");
             
             // wrapperにID:chatを付加
@@ -119,12 +123,10 @@
         }
 
         function updateTimeLimit() {
+            let updateTime = Date.now()
             // placeholder要素内の全ての子要素に対して以下の操作を行う
             $(placeholder).children().each((index, i) => {
-                let l = $(i).attr("data-timelimit");
-                console.log(l);
-                $(i).attr("data-timelimit", `${l-10}`);
-                if(l <= 0) $(i).remove();
+                if(updateTime - $(i).attr("data-timelimit") >= commentDisplayTime) $(i).remove();
             });
         }
     </script>
