@@ -1,8 +1,10 @@
+// Node.jsのバージョンv14.16.1で動作確認
 "use strict";
 const http = require("http");
 const express = require("express");
 const socketIO = require("socket.io");
 const cors = require("cors");
+
 
 // インスタンス化
 const app = express();
@@ -10,7 +12,7 @@ const server = http.Server(app);
 const io = socketIO(server)
 
 // サーバーのポート番号
-const port = 3000;
+const port = 10010;
 
 // corsの許可、POSTでjsonを受け取るのに必要
 app.use(cors(), express.urlencoded({ extended: true }), express.json());
