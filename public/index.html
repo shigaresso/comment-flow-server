@@ -8,6 +8,7 @@
             overflow: hidden;
             /* これによってコメントが長くても折り返さないようになる */
             white-space: nowrap;
+            
         }
 
         .chat {
@@ -46,12 +47,15 @@
     <script>
         let socket = io();
 
-        let itemHeight = 100;
-
+        // ブラウザに何行のコメントを表示するか
+        const windowDevided = 10;
+        // コメント用の高さを取得
+        let commentHeight = Math.round(window.innerHeight/windowDevided);
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
-        // コメント用の行の数
-        let slot = [0, 0, 0, 0, 0, 0, 0, 0];
+        // 各行のコメントが消える時間の管理をする配列を作成
+        let rowCommentDeleteTime = Array(windowDevided);
+        rowCommentDeleteTime.fill(0);
 
         // 接続時の処理
         socket.on('connect', () => {
@@ -60,7 +64,7 @@
 
         // サーバーからのメッセージ拡散に対する処理
         socket.on('spread message', (strMessage) => {
-            console.log(`spread message:${strMessage}`);
+            // console.log(`spread message:${strMessage}`);
 
             // OPENRECのコメントがスタンプの場合は処理しない
             if(strMessage.length == 0) return;
@@ -70,39 +74,44 @@
         });
 
         // コメントを削除する関数の実行感覚
-        setInterval(updateTimeLimit, 2500);
+        setTimeout(updateTimeLimit, 2500);
 
+        // コメント用の高さを変更
+        window.onresize = function() {
+            commentHeight = Math.round(window.innerHeight/windowDevided);
+        }
 
-        function createMoveComment(comment) {
-            // slot配列を0に戻す
-            for (let c = 0; c < slot.length; c++) slot[c] = 0;
+        function createMoveComment(commentMessage) {
+            // コメントが削除される時間と何行目に流すかと一番早く消える場所
+            let comment = {
+                deleteTime: Date.now()+commentDisplayTime,
+                flowRow: 0,
+                maxDisappearTime: 0
+            };
 
-            // 繰り返して指定した関数を実行する
-            $('#placeholder').children().each((index, comment) => {
-                let y = parseFloat($(comment).css("top"));
-                let x = parseFloat($(comment).css("left"));
-
-                // y/itemHeight を四捨五入する
-                let idx = Math.round(y/itemHeight);
-                // コメントの右側を
-                let right = $(comment).data("width") + x;
-
-                // ここで配列slotの1部分が変わる
-                slot[idx] = Math.max(slot[idx], right);
-            });
-
-            // 最初は最大値になるようにしている
-            let minRight = Number.MAX_VALUE;
-            let minSlot = 0;
-
-            for (let c = 0; c < slot.length; c++) {
-                if(slot[c] < minRight) {
-                    minRight = slot[c];
-                    minSlot = c;
+            // コメントをどこに配置出来るか？
+            for (let i = 0; i < rowCommentDeleteTime.length; i++) {
+                // 行からコメントが削除されているかの確認用変数
+                let compareDeleteTime = comment.deleteTime - rowCommentDeleteTime[i];
+                if (compareDeleteTime >= commentDisplayTime/2) {
+                    // コメントを流す処理をする
+                    rowCommentDeleteTime[i] = comment.deleteTime;
+                    comment.flowRow = i;
+                    break;
+                // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
+                } else if (comment.maxDisappearTime <= compareDeleteTime) {
+                    comment.maxDisappearTime = compareDeleteTime;
+                    comment.flowRow = i;
+                // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
+                } else if (i == rowCommentDeleteTime.length - 1) {
+                    console.log("コメントが被ります")
+                    rowCommentDeleteTime[comment.flowRow] = comment.deleteTime;
+                    break;
                 }
             }
+
             // コメントのDOMの作成時刻を持たせる
-            let wrapper = $(`<div data-timelimit=\"${Date.now()}\">`);
+            let wrapper = $(`<div data-timelimit=\"${comment.deleteTime}\">`);
             let message = $("<span>");
             
             // wrapperにID:chatを付加
@@ -110,24 +119,24 @@
             message.attr("class", "comment");
 
             //message_inner.text(comment);
-            message.text(comment);
-            wrapper.append(message);
+            message.text(commentMessage);
+            // wrapper.append(message);
+            wrapper.append(commentMessage);
 
             // CSSを付与
-            wrapper.css("top", itemHeight * minSlot);
-            //wrapper.css("left", Math.max($(window).innerWidth(), minRight));
+            wrapper.css("top", commentHeight * comment.flowRow);
 
             // placeholderにwrapperを追加
             $('#placeholder').append(wrapper);
-            $(wrapper).data("width", wrapper.width());
         }
 
         function updateTimeLimit() {
             let updateTime = Date.now()
             // placeholder要素内の全ての子要素に対して以下の操作を行う
             $(placeholder).children().each((index, i) => {
-                if(updateTime - $(i).attr("data-timelimit") >= commentDisplayTime) $(i).remove();
+                if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
             });
+            setTimeout(updateTimeLimit, 2500);
         }
     </script>
 </body>
