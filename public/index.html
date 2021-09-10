@@ -2,6 +2,10 @@
 <html>
 <head>
     <style type=text/css>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
         body {
             background-color: rgb(0, 255, 0);
             position: relative;
@@ -49,8 +53,8 @@
 
         // ブラウザに何行のコメントを表示するか
         const windowDevided = 10;
-        // コメント用の高さを取得
-        let commentHeight = Math.round(window.innerHeight/windowDevided);
+        // コメントの幅を取得
+        let commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
         // 各行のコメントが消える時間の管理をする配列を作成
@@ -76,51 +80,41 @@
         // コメントを削除する関数の実行感覚
         setTimeout(updateTimeLimit, 2500);
 
-        // コメント用の高さを変更
-        window.onresize = function() {
-            commentHeight = Math.round(window.innerHeight/windowDevided);
-        }
 
         function createMoveComment(commentMessage) {
             // コメントが削除される時間と何行目に流すかと一番早く消える場所
             let comment = {
                 deleteTime: Date.now()+commentDisplayTime,
                 flowRow: 0,
-                maxDisappearTime: 0
+                maxDisappearTime: 0,
+                
             };
 
             // コメントをどこに配置出来るか？
             for (let i = 0; i < rowCommentDeleteTime.length; i++) {
                 // 行からコメントが削除されているかの確認用変数
                 let compareDeleteTime = comment.deleteTime - rowCommentDeleteTime[i];
-                if (compareDeleteTime >= commentDisplayTime/2) {
+                console.log(compareDeleteTime);
+                if (compareDeleteTime >= commentDisplayTime) {
                     // コメントを流す処理をする
                     rowCommentDeleteTime[i] = comment.deleteTime;
                     comment.flowRow = i;
                     break;
                 // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
-                } else if (comment.maxDisappearTime <= compareDeleteTime) {
+                } else if (comment.maxDisappearTime < compareDeleteTime) {
                     comment.maxDisappearTime = compareDeleteTime;
                     comment.flowRow = i;
                 // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
                 } else if (i == rowCommentDeleteTime.length - 1) {
-                    console.log("コメントが被ります")
                     rowCommentDeleteTime[comment.flowRow] = comment.deleteTime;
                     break;
                 }
             }
 
             // コメントのDOMの作成時刻を持たせる
-            let wrapper = $(`<div data-timelimit=\"${comment.deleteTime}\">`);
-            let message = $("<span>");
-            
+            let wrapper = $(`<div data-timelimit=${comment.deleteTime}>`);      
             // wrapperにID:chatを付加
             wrapper.attr("class", "chat");
-            message.attr("class", "comment");
-
-            //message_inner.text(comment);
-            message.text(commentMessage);
-            // wrapper.append(message);
             wrapper.append(commentMessage);
 
             // CSSを付与
@@ -128,6 +122,7 @@
 
             // placeholderにwrapperを追加
             $('#placeholder').append(wrapper);
+            console.log(`コメントを流します: ${comment.flowRow+1}行目`)
         }
 
         function updateTimeLimit() {
