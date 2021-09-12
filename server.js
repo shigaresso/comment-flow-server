@@ -1,5 +1,5 @@
-// Node.jsのバージョンv14.16.1で動作確認
 "use strict";
+// Node.jsのバージョンv14.16.1で動作確認
 const http = require("http");
 const express = require("express");
 const socketIO = require("socket.io");
@@ -14,8 +14,14 @@ const io = socketIO(server)
 // サーバーのポート番号
 const port = 10010;
 
+// corのオプション設定
+
+const corsOption = {
+    origin: /https:\/\/www.(openrec.tv|youtube.com)/
+}
+
 // corsの許可、POSTでjsonを受け取るのに必要
-app.use(cors(), express.urlencoded({ extended: true }), express.json());
+app.use(cors(corsOption), express.urlencoded({ extended: true }), express.json());
 
 // socket.io接続時、及びその後の処理
 io.on("connection", (socket) => {
@@ -23,12 +29,12 @@ io.on("connection", (socket) => {
 
     // 拡張機能のXMLHttpRequestからPOSTメソッドされた時のルーティングの設定
     app.post("/", (req, res) => {
-        // 受け取ったJSONのdataを表示する
-        console.log(req.body.data);
+        // 受け取ったJSONのcommentを表示する
+        console.log(req.body.comment);
         //res.json(req.body);
 
         // spread message 部分に受け取ったデータを送信する
-        io.emit("spread message", req.body.data);
+        io.emit("spread message", req.body.comment);
     });
 
     // localhostからの新しいメッセージ受信時の処理 strMessageのstrは文字列の略？
