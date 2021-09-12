@@ -2,7 +2,7 @@
 <html>
 <head>
     <style type=text/css>
-        * {
+    * {
             margin: 0px;
             padding: 0px;
         }
@@ -33,11 +33,11 @@
         @keyframes commentMove {
             0% {
                 left: 100%;
-                transform: translateX(100%);
+                transform: translateX(0%);
             }
             100% {
                 left: 0%;
-                transform: translateX(-125%);
+                transform: translateX(-100%);
             }
         }
     </style>
@@ -51,17 +51,12 @@
     <script>
         let socket = io();
 
-        // コメントDOM削除の更新間隔
-        const intervalTime = 2500;
         // ブラウザに何行のコメントを表示するか
-        const windowDevided = 10;
-        // コメントの幅を取得
+        const windowDevided = 11;
+        // コメント1行の高さを取得
         let commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
-        // コメントを溜めておく用のキューを作成
-        // この処理にしないと、同時にコメントが来た時に同時処理してしまいコメントが重なる
-        const queue = [];
         // 各行のコメントが消える時間の管理をする配列を作成
         let rowCommentDeleteTime = Array(windowDevided);
         rowCommentDeleteTime.fill(0);
@@ -76,8 +71,6 @@
 
         // サーバーからのメッセージ拡散に対する処理
         socket.on('spread message', (strMessage) => {
-            //console.log(`spread message:${strMessage}`);
-
             // OPENRECのコメントがスタンプの場合は処理しない
             if(strMessage.length == 0) return;
 
@@ -85,9 +78,15 @@
             createMoveComment(strMessage);
         });
 
-        // コメントを削除する関数の実行感覚
-        setInterval(updateTimeLimit, intervalTime);
+        setInterval(commentDelete, commentDisplayTime);
 
+        // const createMoveComment = (strMessage) => {
+        //     const wrapper = $("<div>");
+        //     wrapper.attr("class", "chat");
+        //     wrapper.append(strMessage);
+        //     $(wrapper).data("chat", wrapper.width());
+        //     $("#placeholder").append(wrapper);
+        // }
 
         function createMoveComment(commentMessage) {
             // コメントが削除される時間と何行目に流すかと一番早く消える場所
@@ -102,53 +101,60 @@
             for (let i = 0; i < rowCommentDeleteTime.length; i++) {
                 // 行からコメントが削除されているかの確認用変数
                 let compareDeleteTime = comment.deleteTime - rowCommentDeleteTime[i];
-                console.log(compareDeleteTime);
-                if (comment.length < rowCommentLength[i] || compareDeleteTime >= commentDisplayTime/2) {
+                //console.log(compareDeleteTime);
+                if (comment.length < rowCommentLength || compareDeleteTime >= commentDisplayTime) {
                     // コメントを流す処理をする
                     rowCommentDeleteTime[i] = comment.deleteTime;
                     rowCommentLength[i] = comment.length;
                     comment.flowRow = i;
                     break;
-                // } else if (comment.length <= rowCommentLength[i]) {
-                //     rowCommentDeleteTime[i] = comment.deleteTime;
-                //     rowCommentLength[i] = comment.length;
-                //     comment.flowRow = i;
-                //     break;
-                // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
+                    // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
                 } else if (comment.maxDisappearTime < compareDeleteTime) {
+                    //console.log(`compare:${i+1} ${compareDeleteTime}`)
                     comment.maxDisappearTime = compareDeleteTime;
                     comment.flowRow = i;
-                // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
-                } else if (i == rowCommentDeleteTime.length) {
+                    continue;
+                    // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
+                } else if (i == rowCommentDeleteTime.length - 1) {
                     rowCommentDeleteTime[comment.flowRow] = comment.deleteTime;
+                    rowCommentLength[comment.flowRow] = comment.length;
+                    console.log(`${i+1}回目のループ：${comment.flowRow}に流す`)
                     break;
                 }
             }
-
+            
             // コメントのDOMの作成時刻を持たせる
-            let wrapper = $(`<div data-timelimit=${comment.deleteTime}>`);      
-            // wrapperにID:chatを付加
+            const wrapper = $(`<div data-timelimit=${comment.deleteTime}>`);      
             wrapper.attr("class", "chat");
-            wrapper.append(commentMessage);
-
             // CSSを付与
             wrapper.css("top", commentHeight * comment.flowRow);
-
+            // wrapperにID:chatを付加
+            wrapper.append(commentMessage);
+            
+                
             // placeholderにwrapperを追加
+            //console.log(`コメントを流します: ${comment.flowRow+1}行目`)
+                
+                
+            //setTimeout(function() {wrapper.remove();}, commentDisplayTime);
             $('#placeholder').append(wrapper);
-            console.log(`コメントを流します: ${comment.flowRow+1}行目`)
-
-            setTimeout(function() {wrapper.remove();}, commentDisplayTime);
         }
 
-        // function updateTimeLimit() {
-        //     let updateTime = Date.now()
-        //     // placeholder要素内の全ての子要素に対して以下の操作を行う
-        //     $(placeholder).children().each((index, i) => {
-        //         if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
-        //     });
-        //     //setTimeout(updateTimeLimit, intervalTime);
-        // }
+        function commentDelete() {
+            let updateTime = Date.now()
+            // placeholder要素内の全ての子要素に対して以下の操作を行う
+            $(placeholder).children().each((index, i) => {
+                if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
+            });
+            //setTimeout(updateTimeLimit, intervalTime);
+        }
     </script>
 </body>
 </html>
+
+<!-- 
+    コメントの幅
+    文字列が消えるまでのコマ数
+    左端からの距離
+    １コマあたりの移動距離：
+ -->
