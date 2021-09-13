@@ -15,6 +15,12 @@
             
         }
 
+        #ruler {
+            font-size: 10vh;
+            font-weight: 900;
+            font-family: "Segoe UI Emoji", "MS P ゴシック";
+        }
+
         .chat {
             color: rgb(255, 255, 255);
             font-weight: 900;
@@ -44,6 +50,8 @@
 </head>
 <body>
     <div id="placeholder"></div>
+    <!-- 要素の幅を取得するために利用するDOM -->
+    <span id="ruler" style="visibility:hidden;position:absolute;white-space:nowrap;"></span>
     <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -80,23 +88,16 @@
 
         setInterval(commentDelete, commentDisplayTime);
 
-        // const createMoveComment = (strMessage) => {
-        //     const wrapper = $("<div>");
-        //     wrapper.attr("class", "chat");
-        //     wrapper.append(strMessage);
-        //     $(wrapper).data("chat", wrapper.width());
-        //     $("#placeholder").append(wrapper);
-        // }
-
         function createMoveComment(commentMessage) {
             // コメントが削除される時間と何行目に流すかと一番早く消える場所
             let comment = {
                 deleteTime: Date.now()+commentDisplayTime,
                 flowRow: 0,
+                width: strWidth(commentMessage),
                 maxDisappearTime: 0,
                 length: commentMessage.length
             };
-
+            console.log(comment.width);
             // コメントをどこに配置出来るか？
             for (let i = 0; i < rowCommentDeleteTime.length; i++) {
                 // 行からコメントが削除されているかの確認用変数
@@ -148,13 +149,45 @@
             });
             //setTimeout(updateTimeLimit, intervalTime);
         }
+
+        function strWidth(str) {
+            let e = $("#ruler");
+            let width = e.text(str).get(0).offsetWidth;
+            e.empty();
+            return width;
+        }
     </script>
 </body>
 </html>
 
 <!-- 
-    コメントの幅
-    文字列が消えるまでのコマ数
-    左端からの距離
-    １コマあたりの移動距離：
+    コメントが衝突する為の条件
+        その行で表示されているコメントの一番右にあるもの：旧コメント
+        これから流すコメント：新コメント
+            と定義する
+        
+        コメントを流す時点で
+            旧コメントの右側座標：移動距離[旧コメント速度 * (新コメント発生時間 - 旧コメント発生時間)] - コメント幅
+        移動している
+
+        (新コメントの速度 - 旧コメントの速度) * 残り時間[旧コメント削除時間[旧コメント発生時間 + コメント表示時間] - 新コメント発生時間] >= 旧コメントの右側座標
+            となる場合、新コメントが追い抜く形になるので衝突する
+
+    どの行に流すかのロジックは
+        1.コメントは流れているが新コメントが遅いので追いつかない(旧コメントの速度 >= 新コメントの速度)
+        2.その行にコメントが流れていない
+    の順番で考えると上の段に詰まったコメントになる
+
+    また、どの行でも衝突してしまう場合は、各々の行で
+        (新コメントの速度 - 旧コメントの速度) * 残り時間 - 旧コメントの右側座標
+    を考え、その値が一番小さいものを利用したい
+
+    結果的には
+        コメントが追いつかないかどうかで場合分けをすれば良い
+
+    必要になるもの
+        速度に必要：画面の幅、コメントの幅、表示時間
+        衝突に必要：コメント発生時間
+    配列に保持しておきたいもの
+        旧コメントの速度、発生時間
  -->
