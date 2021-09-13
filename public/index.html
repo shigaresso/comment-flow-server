@@ -16,7 +16,7 @@
         }
 
         #ruler {
-            font-size: 10vh;
+            font-size: 9vh;
             font-weight: 900;
             font-family: "Segoe UI Emoji", "MS P ゴシック";
         }
@@ -24,7 +24,7 @@
         .chat {
             color: rgb(255, 255, 255);
             font-weight: 900;
-            font-size: 10vh;
+            font-size: 9vh;
             font-family: "Segoe UI Emoji", "MS P ゴシック";
             position: absolute;
             will-change: left, transform;
@@ -66,14 +66,8 @@
         let commentMoveWidth = document.documentElement.clientWidth;
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
-        // 各行のコメントが消える時間の管理をする配列を作成
-        let rowCommentDeleteTime = Array(windowDevided);
-        rowCommentDeleteTime.fill(0);
-        // 各行を流れるコメントの長さの配列
-        let rowCommentLength = Array(windowDevided);
-        rowCommentLength.fill(100000);
 
-
+        // 各行の情報を持つ配列の作成
         let row = Array(windowDevided);
         for (let i=0; i<windowDevided; i++) {
             row[i] = {
@@ -96,7 +90,13 @@
             calcRow(strMessage);
         });
 
+        window.onresize = () => {
+            commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
+            commentMoveWidth = document.documentElement.clientWidth;
+        }
+
         setInterval(commentDelete, commentDisplayTime);
+
 
         function calcRow(commentMessage) {
             let comment = {
@@ -107,41 +107,32 @@
             };
             comment.speed = (commentMoveWidth + comment.width)/commentDisplayTime;
             
-            
             for (let i=0; i<row.length; i++) {
                 let relativeSpeed = comment.speed - row[i].speed;
                 let timeLag = comment.bornTime - row[i].bornTime;
-                let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - (row[i].speed * timeLag - row[i].width);
+                let rowCommentRightSide = row[i].speed * timeLag - row[i].width
+                let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
                 
-                // 旧コメントの方が早ければその行に流す または 旧コメント既に消えている
-                // || relativeSpeed <= 0 
-                if (timeLag > commentDisplayTime) {
-                    row[i].bornTime = comment.bornTime;
-                    row[i].speed = comment.speed;
-                    row[i].width = comment.width;
-                    comment.flowRow = i;
-                    console.log(`絶対に被りません`);
-                    console.log(`生成時間：${row[i].bornTime} 速度：${row[i].speed} コメント幅:${row[i].width}`);
-                    createComment(commentMessage, comment);
+                // 行にコメントが存在していない時
+                if (timeLag >= commentDisplayTime) {
+                    createComment(commentMessage, comment, row, i);
+                    break;
+
+                // コメントが行の右側まで出ていて、衝突しない時
+                } else if (rowCommentRightSide >= 0 && collisionWidth <= 0) {   
+                    createComment(commentMessage, comment, row, i);
                     break;
                 }
-                // // 旧コメントが消えていなくて、新コメントの方が早い場合は衝突を考える
-                // } else if (timeLag < commentDisplayTime && collisionWidth < 0) {
-                //     row[i].bornTime = comment.bornTime;
-                //     row[i].speed = comment.speed;
-                //     row[i].width = comment.width;
-                //     comment.flowRow = i;
-                //     console.log(`${i+1}ループ：${comment.flowRow+1}に流します`);
-                //     console.log(`生成時間：${row[i].bornTime} 速度：${row[i].speed} コメント幅:${row[i].width}`);
-                //     break;
-                
+
+                /*
+                    見栄えが悪くなるので衝突するコメントは表示しないことにした
+                */
                 // // 衝突する場合は一番接触時間が短い行を探す為に保留
-                // // } else if (collisionWidth > 0 && comment.minCollisionWidth > collisionWidth) {
                 // } else if (comment.minCollisionWidth > collisionWidth) {
                 //     comment.minCollisionWidth = collisionWidth;
                 //     comment.flowRow = i;
                 //     continue;
-                
+
                 // // どの行に流しても衝突している場合は一番接触時間が短い行に流す
                 // } else if (i == row.length - 1) {
                 //     row[comment.flowRow].bornTime = comment.bornTime;
@@ -149,6 +140,7 @@
                 //     row[comment.flowRow].width = comment.width;
                 //     console.log(`${i+1}ループ：${comment.flowRow+1}に流します`);
                 //     console.log(`生成時間：${row[comment.flowRow].bornTime} 速度：${row[comment.flowRow].speed} コメント幅:${row[comment.flowRow].width}`);
+                //     createComment(commentMessage, comment);
                 //     break;
                 // }
             }
@@ -183,7 +175,11 @@
             
         }
 
-        function createComment(strMessage, comment) {
+        const createComment = (strMessage, comment, row, index) => {
+            row[index].bornTime = comment.bornTime;
+            row[index].speed = comment.speed;
+            row[index].width = comment.width;
+            comment.flowRow = index;
             // コメントのDOMの作成時刻を持たせる
             const wrapper = $(`<div data-timelimit=${comment.bornTime+commentDisplayTime}>`);      
             wrapper.attr("class", "chat");
