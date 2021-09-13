@@ -63,6 +63,7 @@
         const windowDevided = 11;
         // コメント1行の高さを取得
         let commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
+        let commentMoveWidth = document.documentElement.clientWidth;
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
         // 各行のコメントが消える時間の管理をする配列を作成
@@ -72,6 +73,15 @@
         let rowCommentLength = Array(windowDevided);
         rowCommentLength.fill(100000);
 
+
+        let row = Array(windowDevided);
+        for (let i=0; i<windowDevided; i++) {
+            row[i] = {
+                bornTime: 0,
+                speed: 0,
+                width: 0,
+            }
+        }
         // 接続時の処理
         socket.on('connect', () => {
             console.log("socket.ioに接続しました");
@@ -83,54 +93,104 @@
             if(strMessage.length == 0) return;
 
             // 流れるコメントの作成
-            createMoveComment(strMessage);
+            calcRow(strMessage);
         });
 
         setInterval(commentDelete, commentDisplayTime);
 
-        function createMoveComment(commentMessage) {
-            // コメントが削除される時間と何行目に流すかと一番早く消える場所
+        function calcRow(commentMessage) {
             let comment = {
-                deleteTime: Date.now()+commentDisplayTime,
+                bornTime: Date.now(),
                 flowRow: 0,
+                minCollisionWidth: commentMoveWidth,
                 width: strWidth(commentMessage),
-                maxDisappearTime: 0,
-                length: commentMessage.length
             };
-            console.log(comment.width);
-            // コメントをどこに配置出来るか？
-            for (let i = 0; i < rowCommentDeleteTime.length; i++) {
-                // 行からコメントが削除されているかの確認用変数
-                let compareDeleteTime = comment.deleteTime - rowCommentDeleteTime[i];
-                //console.log(compareDeleteTime);
-                if (comment.length < rowCommentLength || compareDeleteTime >= commentDisplayTime) {
-                    // コメントを流す処理をする
-                    rowCommentDeleteTime[i] = comment.deleteTime;
-                    rowCommentLength[i] = comment.length;
+            comment.speed = (commentMoveWidth + comment.width)/commentDisplayTime;
+            
+            
+            for (let i=0; i<row.length; i++) {
+                let relativeSpeed = comment.speed - row[i].speed;
+                let timeLag = comment.bornTime - row[i].bornTime;
+                let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - (row[i].speed * timeLag - row[i].width);
+                
+                // 旧コメントの方が早ければその行に流す または 旧コメント既に消えている
+                // || relativeSpeed <= 0 
+                if (timeLag > commentDisplayTime) {
+                    row[i].bornTime = comment.bornTime;
+                    row[i].speed = comment.speed;
+                    row[i].width = comment.width;
                     comment.flowRow = i;
-                    break;
-                    // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
-                } else if (comment.maxDisappearTime < compareDeleteTime) {
-                    //console.log(`compare:${i+1} ${compareDeleteTime}`)
-                    comment.maxDisappearTime = compareDeleteTime;
-                    comment.flowRow = i;
-                    continue;
-                    // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
-                } else if (i == rowCommentDeleteTime.length - 1) {
-                    rowCommentDeleteTime[comment.flowRow] = comment.deleteTime;
-                    rowCommentLength[comment.flowRow] = comment.length;
-                    console.log(`${i+1}回目のループ：${comment.flowRow}に流す`)
+                    console.log(`絶対に被りません`);
+                    console.log(`生成時間：${row[i].bornTime} 速度：${row[i].speed} コメント幅:${row[i].width}`);
+                    createComment(commentMessage, comment);
                     break;
                 }
+                // // 旧コメントが消えていなくて、新コメントの方が早い場合は衝突を考える
+                // } else if (timeLag < commentDisplayTime && collisionWidth < 0) {
+                //     row[i].bornTime = comment.bornTime;
+                //     row[i].speed = comment.speed;
+                //     row[i].width = comment.width;
+                //     comment.flowRow = i;
+                //     console.log(`${i+1}ループ：${comment.flowRow+1}に流します`);
+                //     console.log(`生成時間：${row[i].bornTime} 速度：${row[i].speed} コメント幅:${row[i].width}`);
+                //     break;
+                
+                // // 衝突する場合は一番接触時間が短い行を探す為に保留
+                // // } else if (collisionWidth > 0 && comment.minCollisionWidth > collisionWidth) {
+                // } else if (comment.minCollisionWidth > collisionWidth) {
+                //     comment.minCollisionWidth = collisionWidth;
+                //     comment.flowRow = i;
+                //     continue;
+                
+                // // どの行に流しても衝突している場合は一番接触時間が短い行に流す
+                // } else if (i == row.length - 1) {
+                //     row[comment.flowRow].bornTime = comment.bornTime;
+                //     row[comment.flowRow].speed = comment.speed;
+                //     row[comment.flowRow].width = comment.width;
+                //     console.log(`${i+1}ループ：${comment.flowRow+1}に流します`);
+                //     console.log(`生成時間：${row[comment.flowRow].bornTime} 速度：${row[comment.flowRow].speed} コメント幅:${row[comment.flowRow].width}`);
+                //     break;
+                // }
             }
+
+
+            // // コメントをどこに配置出来るか？
+            // for (let i = 0; i < rowCommentDeleteTime.length; i++) {
+            //     // 行からコメントが削除されているかの確認用変数
+            //     let compareDeleteTime = comment.bornTime - rowCommentDeleteTime[i];
+            //     //console.log(compareDeleteTime);
+            //     if (comment.length < rowCommentLength || compareDeleteTime >= commentDisplayTime) {
+            //         // コメントを流す処理をする
+            //         rowCommentDeleteTime[i] = comment.bornTime;
+            //         rowCommentLength[i] = comment.length;
+            //         comment.flowRow = i;
+            //         break;
+            //         // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
+            //     } else if (comment.maxDisappearTime < compareDeleteTime) {
+            //         //console.log(`compare:${i+1} ${compareDeleteTime}`)
+            //         comment.maxDisappearTime = compareDeleteTime;
+            //         comment.flowRow = i;
+            //         continue;
+            //         // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
+            //     } else if (i == rowCommentDeleteTime.length - 1) {
+            //         rowCommentDeleteTime[comment.flowRow] = comment.bornTime;
+            //         rowCommentLength[comment.flowRow] = comment.length;
+            //         console.log(`${i+1}回目のループ：${comment.flowRow}に流す`)
+            //         break;
+            //     }
+            // }
             
+            
+        }
+
+        function createComment(strMessage, comment) {
             // コメントのDOMの作成時刻を持たせる
-            const wrapper = $(`<div data-timelimit=${comment.deleteTime}>`);      
+            const wrapper = $(`<div data-timelimit=${comment.bornTime+commentDisplayTime}>`);      
             wrapper.attr("class", "chat");
             // CSSを付与
             wrapper.css("top", commentHeight * comment.flowRow);
             // wrapperにID:chatを付加
-            wrapper.append(commentMessage);
+            wrapper.append(strMessage);
             
                 
             // placeholderにwrapperを追加
@@ -148,6 +208,7 @@
                 if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
             });
             //setTimeout(updateTimeLimit, intervalTime);
+            console.log("コメント削除関数を呼び出し完了")
         }
 
         function strWidth(str) {
