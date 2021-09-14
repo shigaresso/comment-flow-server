@@ -21,7 +21,7 @@ const corsOption = {
 }
 
 // corsの許可、POSTでjsonを受け取るのに必要
-app.use(cors(corsOption), express.urlencoded({ extended: true }), express.json());
+app.use(cors(corsOption), express.urlencoded({ extended: true }), express.json(), express.static("public"));
 
 // socket.io接続時、及びその後の処理
 io.on("connection", (socket) => {
