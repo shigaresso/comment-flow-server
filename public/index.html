@@ -78,17 +78,20 @@
                 } else if (rowCommentRightSide >= 0 && collisionWidth <= 0) {   
                     createComment(commentMessage, comment, row, i);
                     break;
+                
+                } else if (i == row.length - 1) {
+                    console.log("コメントを流せませんでした");
                 }
                 /*
                     見栄えが悪くなるので衝突するコメントは表示しないことにした
                 */
                 // // 衝突する場合は一番接触時間が短い行を探す為に保留
-                // } else if ((collisionWidth <= commentMoveWidth/10) && (comment.minCollisionWidth > collisionWidth)) {
+                // } else if (rowCommentRightSide >=0 &&  (collisionWidth <= commentMoveWidth/10) && (comment.minCollisionWidth > collisionWidth)) {
                 //     comment.minCollisionWidth = collisionWidth;
                 //     comment.flowRow = i;
                 //     comment.flag = true;
                 //     continue;
-
+                
                 // // どの行に流しても衝突している場合は一番接触時間が短い行に流す
                 // } else if (i == row.length - 1 && comment.flag == true) {
                 //     createComment(commentMessage, comment, row, comment.flowRow);
