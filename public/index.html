@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <div id="placeholder"></div>
@@ -10,7 +10,7 @@
     <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+    <script type="text/javascript" src="index.js"></script>
     <script>
         let socket = io();
 
@@ -31,6 +31,7 @@
                 width: 0,
             }
         }
+        
         // 接続時の処理
         socket.on('connect', () => {
             console.log("socket.ioに接続しました");
@@ -52,121 +53,6 @@
 
         setInterval(commentDelete, commentDisplayTime);
 
-
-        function calcRow(commentMessage) {
-            let comment = {
-                bornTime: Date.now(),
-                flowRow: 0,
-                minCollisionWidth: commentMoveWidth,
-                width: strWidth(commentMessage),
-                flag: false,
-            };
-            comment.speed = (commentMoveWidth + comment.width)/commentDisplayTime;
-            
-            for (let i=0; i<row.length; i++) {
-                let relativeSpeed = comment.speed - row[i].speed;
-                let timeLag = comment.bornTime - row[i].bornTime;
-                let rowCommentRightSide = row[i].speed * timeLag - row[i].width
-                let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
-                
-                // 行にコメントが存在していない時
-                if (timeLag >= commentDisplayTime) {
-                    createComment(commentMessage, comment, row, i);
-                    break;
-
-                // コメントが行の右側まで出ていて、衝突しない時
-                } else if (rowCommentRightSide >= 0 && collisionWidth <= 0) {   
-                    createComment(commentMessage, comment, row, i);
-                    break;
-                
-                } else if (i == row.length - 1) {
-                    console.log("コメントを流せませんでした");
-                }
-                /*
-                    見栄えが悪くなるので衝突するコメントは表示しないことにした
-                */
-                // // 衝突する場合は一番接触時間が短い行を探す為に保留
-                // } else if (rowCommentRightSide >=0 &&  (collisionWidth <= commentMoveWidth/10) && (comment.minCollisionWidth > collisionWidth)) {
-                //     comment.minCollisionWidth = collisionWidth;
-                //     comment.flowRow = i;
-                //     comment.flag = true;
-                //     continue;
-                
-                // // どの行に流しても衝突している場合は一番接触時間が短い行に流す
-                // } else if (i == row.length - 1 && comment.flag == true) {
-                //     createComment(commentMessage, comment, row, comment.flowRow);
-                //     break;
-                // }
-            }
-
-
-            // // コメントをどこに配置出来るか？
-            // for (let i = 0; i < rowCommentDeleteTime.length; i++) {
-            //     // 行からコメントが削除されているかの確認用変数
-            //     let compareDeleteTime = comment.bornTime - rowCommentDeleteTime[i];
-            //     //console.log(compareDeleteTime);
-            //     if (comment.length < rowCommentLength || compareDeleteTime >= commentDisplayTime) {
-            //         // コメントを流す処理をする
-            //         rowCommentDeleteTime[i] = comment.bornTime;
-            //         rowCommentLength[i] = comment.length;
-            //         comment.flowRow = i;
-            //         break;
-            //         // コメントをそこに流さない場合、今あるコメントが一番早くコメントが流れ終わる場所を探す
-            //     } else if (comment.maxDisappearTime < compareDeleteTime) {
-            //         //console.log(`compare:${i+1} ${compareDeleteTime}`)
-            //         comment.maxDisappearTime = compareDeleteTime;
-            //         comment.flowRow = i;
-            //         continue;
-            //         // 最後まで条件を満たす行がなかった時、一番早くコメントが流れ終わっている行に流す
-            //     } else if (i == rowCommentDeleteTime.length - 1) {
-            //         rowCommentDeleteTime[comment.flowRow] = comment.bornTime;
-            //         rowCommentLength[comment.flowRow] = comment.length;
-            //         console.log(`${i+1}回目のループ：${comment.flowRow}に流す`)
-            //         break;
-            //     }
-            // }
-            
-            
-        }
-
-        const createComment = (strMessage, comment, row, index) => {
-            row[index].bornTime = comment.bornTime;
-            row[index].speed = comment.speed;
-            row[index].width = comment.width;
-            comment.flowRow = index;
-            // コメントのDOMの作成時刻を持たせる
-            const wrapper = $(`<div data-timelimit=${comment.bornTime+commentDisplayTime}>`);      
-            wrapper.attr("class", "chat");
-            // CSSを付与
-            wrapper.css("top", commentHeight * comment.flowRow);
-            // wrapperにID:chatを付加
-            wrapper.append(strMessage);
-            
-                
-            // placeholderにwrapperを追加
-            //console.log(`コメントを流します: ${comment.flowRow+1}行目`)
-                
-                
-            //setTimeout(function() {wrapper.remove();}, commentDisplayTime);
-            $('#placeholder').append(wrapper);
-        }
-
-        function commentDelete() {
-            let updateTime = Date.now()
-            // placeholder要素内の全ての子要素に対して以下の操作を行う
-            $(placeholder).children().each((index, i) => {
-                if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
-            });
-            //setTimeout(updateTimeLimit, intervalTime);
-            console.log("コメント削除関数を呼び出し完了")
-        }
-
-        function strWidth(str) {
-            let e = $("#ruler");
-            let width = e.text(str).get(0).offsetWidth;
-            e.empty();
-            return width;
-        }
     </script>
 </body>
 </html>
