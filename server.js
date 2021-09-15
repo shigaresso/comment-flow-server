@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
     app.post("/", (req, res) => {
         // 受け取ったJSONのcommentを表示する
         console.log(req.body.comment);
-        //res.json(req.body);
+        res.send(req.body);
 
         // spread message 部分に受け取ったデータを送信する
         io.emit("spread message", req.body.comment);
