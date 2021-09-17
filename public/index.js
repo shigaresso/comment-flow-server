@@ -37,14 +37,24 @@ const createComment = (strMessage, comment, row, index) => {
     row[index].width = comment.width;
 
     comment.flowRow = index;
-    // コメントのDOMの作成時刻を持たせる
-    const wrapper = $(`<div data-timelimit=${comment.bornTime+commentDisplayTime}>`);      
-    wrapper.attr("class", "chat");
-    // CSSを付与
-    wrapper.css("top", commentHeight * comment.flowRow);
-    // wrapperにID:chatを付加
-    wrapper.append(strMessage);
-    $('#placeholder').append(wrapper);
+    const div_text = document.createElement("div");
+    div_text.setAttribute("class", "chat")
+    const placeholder = document.getElementById("placeholder");
+    count = count % 100000;
+    div_text.id = "text" + count;
+    div_text.setAttribute("data-timelimit", `${comment.bornTime+commentDisplayTime}`)
+    count++;
+    div_text.style.top = commentHeight * comment.flowRow + 'px';
+    div_text.appendChild(document.createTextNode(strMessage));
+    placeholder.appendChild(div_text);
+            
+    // GSAP によるアニメーション
+    gsap.to("#"+div_text.id, {
+        duration: 5,
+         x: -1*(document.documentElement.clientWidth+comment.width), 
+         ease: "linear"
+        });
+            
 }
 
 const commentDelete = () => {

@@ -9,6 +9,7 @@
     <span id="ruler" style="visibility:hidden;position:absolute;white-space:nowrap;"></span>
     <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js" integrity="sha512-UxP+UhJaGRWuMG2YC6LPWYpFQnsSgnor0VUF3BHdD83PS/pOpN+FYbZmrYN+ISX8jnvgVUciqP/fILOXDjZSwg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript" src="index.js"></script>
     <script>
@@ -21,6 +22,9 @@
         let commentMoveWidth = document.documentElement.clientWidth;
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
+
+        // 流れたコメントの数(GSAPによるコメントの移動にも用いる)
+        let count = 0;
 
         // 各行の情報を持つ配列の作成
         let row = Array(windowDevided);
