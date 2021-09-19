@@ -3,6 +3,11 @@
     margin: 0px;
     padding: 0px;
 }
+:root {
+    --font-size: 9vh;
+    --font-weight: 900;
+    --font-family: "Segoe UI Emoji", "MS P ゴシック";
+}
 body {
     background-color: rgb(0, 255, 0);
     position: relative;
@@ -12,16 +17,16 @@ body {
 }
 
 #ruler {
-    font-size: 9vh;
-    font-weight: 900;
-    font-family: "Segoe UI Emoji", "MS P ゴシック";
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    font-family: var(--font-family);
 }
 
 .chat {
     color: rgb(255, 255, 255);
-    font-size: 9vh;
-    font-weight: 900;
-    font-family: "Segoe UI Emoji", "MS P ゴシック";
+    font-size: var(--font-size);
+    font-weight: var(--font-weight);
+    font-family: var(--font-family);
     position: absolute;
     line-height: 1em;
     /* これをつけることによって移動が終わっても画面から消えたところで固定される */
