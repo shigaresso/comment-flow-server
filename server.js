@@ -15,7 +15,6 @@ const io = socketIO(server)
 const port = 10010;
 
 // corのオプション設定
-
 const corsOption = {
     origin: /https:\/\/www.(openrec.tv|youtube.com)/
 }
@@ -58,10 +57,16 @@ app.get("/", (req, res) => {
         "/" にアクセスがあった時、res.sendFile()によって、
         __dirname(このプログラムのディレクトリのパス)/index.htmlを渡す
     */
-    res.sendFile(`${__dirname}/public/index.html`);
+    res.sendFile(`${__dirname}/public/html/index.html`);
+});
+
+app.get("/css-version", (req, res) => {
+    console.log("CSS へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/css-version.html`);
 });
 
 // サーバーの起動
 server.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
+    console.log(`listening on http://localhost:${port}/css-version/`);
 });

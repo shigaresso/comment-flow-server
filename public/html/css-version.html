@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="../css/css-version.css">
 </head>
 <body>
     <div id="placeholder"></div>
@@ -11,7 +11,7 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js" integrity="sha512-UxP+UhJaGRWuMG2YC6LPWYpFQnsSgnor0VUF3BHdD83PS/pOpN+FYbZmrYN+ISX8jnvgVUciqP/fILOXDjZSwg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="../js/css-version.js"></script>
     <script>
         let socket = io();
 
@@ -60,35 +60,3 @@
     </script>
 </body>
 </html>
-
-<!-- 
-    コメントが衝突する為の条件
-        その行で表示されているコメントの一番右にあるもの：旧コメント
-        これから流すコメント：新コメント
-            と定義する
-        
-        コメントを流す時点で
-            旧コメントの右側座標：移動距離[旧コメント速度 * (新コメント発生時間 - 旧コメント発生時間)] - コメント幅
-        移動している
-
-        (新コメントの速度 - 旧コメントの速度) * 残り時間[旧コメント削除時間[旧コメント発生時間 + コメント表示時間] - 新コメント発生時間] >= 旧コメントの右側座標
-            となる場合、新コメントが追い抜く形になるので衝突する
-
-    どの行に流すかのロジックは
-        1.コメントは流れているが新コメントが遅いので追いつかない(旧コメントの速度 >= 新コメントの速度)
-        2.その行にコメントが流れていない
-    の順番で考えると上の段に詰まったコメントになる
-
-    また、どの行でも衝突してしまう場合は、各々の行で
-        (新コメントの速度 - 旧コメントの速度) * 残り時間 - 旧コメントの右側座標
-    を考え、その値が一番小さいものを利用したい
-
-    結果的には
-        コメントが追いつかないかどうかで場合分けをすれば良い
-
-    必要になるもの
-        速度に必要：画面の幅、コメントの幅、表示時間
-        衝突に必要：コメント発生時間
-    配列に保持しておきたいもの
-        旧コメントの速度、発生時間
- -->
