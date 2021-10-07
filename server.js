@@ -16,7 +16,7 @@ const port = 10010;
 
 // corのオプション設定
 const corsOption = {
-    origin: /https:\/\/www.(openrec.tv|youtube.com)/
+    origin: /https:\/\/www.(openrec.tv|youtube.com|twitch.tv)/
 }
 
 // corsの許可、POSTでjsonを受け取るのに必要
@@ -63,6 +63,11 @@ app.get("/", (req, res) => {
 app.get("/css-version", (req, res) => {
     console.log("CSS へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/css-version.html`);
+});
+
+app.get("/english", (req, res) => {
+    console.log("CSS へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/test/english.html`);
 });
 
 // サーバーの起動

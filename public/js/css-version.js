@@ -3,7 +3,7 @@ const calcRow = commentMessage => {
         bornTime: Date.now(),
         flowRow: 0,
         minCollisionWidth: commentMoveWidth,
-        width: strWidth(commentMessage),
+        width: measureStringWidth(commentMessage),
         flag: false,
     };
     comment.speed = (commentMoveWidth + comment.width)/commentDisplayTime;
@@ -40,34 +40,45 @@ const createComment = (strMessage, comment, row, index) => {
     const div_text = document.createElement("div");
     div_text.setAttribute("class", "chat")
     const placeholder = document.getElementById("placeholder");
-    count = count % 100000;
-    div_text.id = "text" + count;
     div_text.setAttribute("data-timelimit", `${comment.bornTime+commentDisplayTime}`)
-    count++;
     div_text.style.top = commentHeight * comment.flowRow + 'px';
     div_text.appendChild(document.createTextNode(strMessage));
     placeholder.appendChild(div_text);
             
-    
 }
 
+// const commentDelete = () => {
+//     let updateTime = Date.now()
+//     // placeholder要素内の全ての子要素に対して以下の操作を行う
+//     $(placeholder).children().each((index, i) => {
+//         if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
+//     });
+//     console.log("コメント削除関数を呼び出し完了")
+// }
+
 const commentDelete = () => {
-    let updateTime = Date.now()
-    // placeholder要素内の全ての子要素に対して以下の操作を行う
-    $(placeholder).children().each((index, i) => {
-        if(updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
-    });
-    console.log("コメント削除関数を呼び出し完了")
+    const updateTime = Date.now();
+    const dom = document.getElementsByClassName("chat");
+    for (const iterator of dom) {
+        console.log(iterator.getAttribute("data-timelimit"));
+        if (updateTime - iterator.getAttribute("data-timelimit") >= 0) {
+            iterator.remove();
+        }
+    }
 }
 
 /**
  * コメントが画面幅+コメント幅移動するので、コメント幅を調べる為の関数
- * @param {コメントにする文字列} str 
- * @returns コメント幅
+ * @param {コメントにする文字列} string 
+ * @returns 文字列の幅のピクセル
  */
-const strWidth = str => {
-    let e = $("#ruler");
-    let width = e.text(str).get(0).offsetWidth;
-    e.empty();
-    return width;
+const measureStringWidth = (string) => {
+    const span = document.createElement("span");
+    const text = document.createTextNode(string);
+    span.appendChild(text);
+    const ruler = document.getElementById("ruler");
+    ruler.appendChild(span);
+    const stringWidth = ruler.clientWidth;
+    span.remove();
+    return stringWidth;
 }
