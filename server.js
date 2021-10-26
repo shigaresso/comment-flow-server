@@ -65,13 +65,19 @@ app.get("/css-version", (req, res) => {
     res.sendFile(`${__dirname}/public/html/css-version.html`);
 });
 
+app.get("/worker-dom", (req, res) => {
+    console.log("webworker へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/worker-dom.html`);
+});
+
 app.get("/english", (req, res) => {
-    console.log("CSS へのアクセスがありました")
+    console.log("English へのアクセスがありました")
     res.sendFile(`${__dirname}/public/test/english.html`);
 });
 
 // サーバーの起動
 server.listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
+    console.log(`listening on http://localhost:${port}/`);
     console.log(`listening on http://localhost:${port}/css-version/`);
+    console.log(`listening on http://localhost:${port}/worker-dom/`);
 });
