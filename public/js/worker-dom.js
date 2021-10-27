@@ -1,13 +1,4 @@
-setInterval(() => {
-    const updateTime = Date.now();
-    const dom = document.getElementsByClassName('chat');
-    for (const iterator of dom) {
-        console.log(iterator);
-        if (updateTime - iterator.getAttribute("data-timelimit") >= 0) {
-            iterator.remove();
-        }
-    }
-}, 8000);
+
 
 const calcRow = commentMessage => {
     let comment = {

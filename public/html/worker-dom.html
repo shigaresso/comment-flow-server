@@ -22,6 +22,8 @@
         // コメント1行の高さを取得
         let commentHeight = Math.round(document.documentElement.clientHeight / windowDevided);
         let commentMoveWidth = document.documentElement.clientWidth;
+        // コメントの表示時間(単位：ms)
+        const commentDisplayTime = 5000;
 
         // 各行の情報を持つ配列の作成
         let row = Array(windowDevided);
@@ -52,9 +54,20 @@
             commentMoveWidth = document.documentElement.clientWidth;
         }
 
+        setInterval(() => {
+            const updateTime = Date.now();
+            const dom = document.getElementsByClassName('chat');
+            for (const iterator of dom) {
+                console.log(iterator);
+                if (updateTime - iterator.getAttribute("data-timelimit") >= 0) {
+                    iterator.remove();
+                }
+            }
+        }, commentDisplayTime);
+
     </script>
     <script type="module">
-        import {upgradeElement} from 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.index.mjs';
+        import { upgradeElement } from 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.index.mjs';
         upgradeElement(document.getElementById('hello'), 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.worker.mjs');
     </script>
 </body>
