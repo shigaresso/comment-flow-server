@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="../css/css-version.css">
 </head>
+
 <body>
     <div id="placeholder"></div>
     <!-- 要素の幅を取得するために利用するDOM -->
@@ -16,7 +18,7 @@
         // ブラウザに何行のコメントを表示するか
         const windowDevided = 11;
         // コメント1行の高さを取得
-        let commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
+        let commentHeight = Math.round(document.documentElement.clientHeight / windowDevided);
         let commentMoveWidth = document.documentElement.clientWidth;
         // コメントの表示時間(単位：ms)
         const commentDisplayTime = 5000;
@@ -26,14 +28,14 @@
 
         // 各行の情報を持つ配列の作成
         let row = Array(windowDevided);
-        for (let i=0; i<windowDevided; i++) {
+        for (let i = 0; i < windowDevided; i++) {
             row[i] = {
                 bornTime: 0,
                 speed: 0,
                 width: 0,
             }
         }
-        
+
         // 接続時の処理
         socket.on('connect', () => {
             console.log("socket.ioに接続しました");
@@ -42,14 +44,14 @@
         // サーバーからのメッセージ拡散に対する処理
         socket.on('spread message', (strMessage) => {
             // OPENRECのコメントがスタンプの場合は処理しない
-            if(strMessage.length == 0) return;
+            if (strMessage.length == 0) return;
 
             // 流れるコメントの作成
             calcRow(strMessage);
         });
 
         window.onresize = () => {
-            commentHeight = Math.round(document.documentElement.clientHeight/windowDevided);
+            commentHeight = Math.round(document.documentElement.clientHeight / windowDevided);
             commentMoveWidth = document.documentElement.clientWidth;
         }
 
@@ -57,4 +59,5 @@
 
     </script>
 </body>
+
 </html>
