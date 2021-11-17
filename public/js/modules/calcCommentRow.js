@@ -2,7 +2,7 @@ import measureStringWidth from "./measure.js";
 import createComment from "../gsap.js";
 
 const calcCommentRow = commentMessage => {
-    let comment = {
+    const comment = {
         bornTime: Date.now(),
         flowRow: 0,
         minCollisionWidth: commentMoveWidth,
@@ -17,13 +17,8 @@ const calcCommentRow = commentMessage => {
         let rowCommentRightSide = row[i].speed * timeLag - row[i].width
         let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
 
-        // 行にコメントが存在していない時
-        if (timeLag >= commentDisplayTime) {
-            createComment(commentMessage, comment, row, i);
-            break;
-
-            // コメントが行の右側まで出ていて、衝突しない時
-        } else if (rowCommentRightSide >= 0 && collisionWidth <= 0) {
+        // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
+        if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
             createComment(commentMessage, comment, row, i);
             break;
 
