@@ -51,13 +51,13 @@ io.on("connection", (socket) => {
 });
 
 // GETメソッドされた時のルーティングの設定
-app.get("/", (req, res) => {
+app.get("/gsap", (req, res) => {
     console.log("/ へのアクセスがありました")
     /*
         "/" にアクセスがあった時、res.sendFile()によって、
-        __dirname(このプログラムのディレクトリのパス)/index.htmlを渡す
+        __dirname(このプログラムのディレクトリのパス)/gsap.htmlを渡す
     */
-    res.sendFile(`${__dirname}/public/html/index.html`);
+    res.sendFile(`${__dirname}/public/html/gsap.html`);
 });
 
 app.get("/css-version", (req, res) => {
@@ -77,7 +77,7 @@ app.get("/english", (req, res) => {
 
 // サーバーの起動
 server.listen(port, () => {
-    console.log(`listening on http://localhost:${port}/`);
+    console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/css-version/`);
     console.log(`listening on http://localhost:${port}/worker-dom/`);
 });

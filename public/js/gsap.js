@@ -1,9 +1,11 @@
+import measureStringWidth from "./modules/measure.js";
+
 const calcRow = commentMessage => {
     let comment = {
         bornTime: Date.now(),
         flowRow: 0,
         minCollisionWidth: commentMoveWidth,
-        width: strWidth(commentMessage),
+        width: measureStringWidth(commentMessage),
         flag: false,
     };
     comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
@@ -58,12 +60,14 @@ const createComment = (strMessage, comment, row, index) => {
 }
 
 const commentDelete = () => {
-    let updateTime = Date.now()
-    // placeholder要素内の全ての子要素に対して以下の操作を行う
-    $(placeholder).children().each((index, i) => {
-        if (updateTime - $(i).attr("data-timelimit") >= 0) $(i).remove();
-    });
-    console.log("コメント削除関数を呼び出し完了")
+    const updateTime = Date.now();
+    const dom = document.getElementsByClassName("chat");
+    for (const iterator of dom) {
+        console.log(iterator.getAttribute("data-timelimit"));
+        if (updateTime - iterator.getAttribute("data-timelimit") >= 0) {
+            iterator.remove();
+        }
+    }
 }
 
 /**
@@ -71,9 +75,11 @@ const commentDelete = () => {
  * @param {コメントにする文字列} str 
  * @returns コメント幅
  */
-const strWidth = str => {
-    let e = $("#ruler");
-    let width = e.text(str).get(0).offsetWidth;
-    e.empty();
-    return width;
-}
+// const measureStringWidth = str => {
+//     let e = $("#ruler");
+//     let width = e.text(str).get(0).offsetWidth;
+//     e.empty();
+//     return width;
+// }
+
+export {calcRow, createComment, commentDelete};
