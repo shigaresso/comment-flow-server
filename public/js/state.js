@@ -10,7 +10,7 @@ const commentDisplayTime = 5000;
 let count = 0;
 
 // 各行の情報を持つ配列の作成
-let row = Array(windowDevided);
+const row = Array(windowDevided);
 for (let i = 0; i < windowDevided; i++) {
     row[i] = {
         bornTime: 0,
