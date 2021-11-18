@@ -1,6 +1,5 @@
 import calcCommentRow from "./modules/calcCommentRow.js";
 import commentDelete from "./modules/commentDelete.js";
-import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
 
 const socket = io();
 

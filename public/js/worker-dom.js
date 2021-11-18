@@ -1,60 +1,26 @@
-const calcCommentRow = commentMessage => {
-    const comment = {
-        bornTime: Date.now(),
-        flowRow: 0,
-        minCollisionWidth: commentMoveWidth,
-        width: measureStringWidth(commentMessage),
-        flag: false,
-    };
-    comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
+import calcCommentRow from "./modules/calcCommentRow.js";
+import commentDelete from "./modules/commentDelete.js";
+import createComment from "./modules/createComment.js";
 
-    for (let i = 0; i < row.length; i++) {
-        let relativeSpeed = comment.speed - row[i].speed;
-        let timeLag = comment.bornTime - row[i].bornTime;
-        let rowCommentRightSide = row[i].speed * timeLag - row[i].width
-        let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
+const socket = io();
 
-        // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
-        if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
-            createComment(commentMessage, comment, row, i);
-            break;
+// 接続時の処理
+socket.on('connect', () => {
+    console.log("socket.ioに接続しました");
+});
 
-        } else if (i == row.length - 1) {
-            console.log("コメントを流せませんでした");
-        }
+// サーバーからのメッセージ拡散に対する処理
+socket.on('spread message', (strMessage) => {
+    // OPENRECのコメントがスタンプの場合は処理しない
+    if (strMessage.length == 0) return;
+
+    // 流れるコメントの作成
+    const a = calcCommentRow(strMessage);
+    if (!a) {
+        return;
     }
-}
+    const [message, text, row, index] = a;
+    createComment(message, text, row, index);
+});
 
-const createComment = (strMessage, comment, row, index) => {
-    // 次、この行にコメントが流れる為の条件についての情報
-    row[index].bornTime = comment.bornTime;
-    row[index].speed = comment.speed;
-    row[index].width = comment.width;
-
-    comment.flowRow = index;
-    const div_text = document.createElement("div");
-    div_text.setAttribute("class", "chat");
-    div_text.setAttribute("id", "move");
-    const placeholder = document.getElementById("placeholder");
-    div_text.setAttribute("data-timelimit", `${comment.bornTime + commentDisplayTime}`)
-    div_text.style.top = commentHeight * comment.flowRow + 'px';
-    div_text.appendChild(document.createTextNode(strMessage));
-    placeholder.appendChild(div_text);
-
-}
-
-/**
- * コメントが画面幅+コメント幅移動するので、コメント幅を調べる為の関数
- * @param {コメントにする文字列} string 
- * @returns 文字列の幅のピクセル
- */
-const measureStringWidth = (string) => {
-    const span = document.createElement("span");
-    const text = document.createTextNode(string);
-    span.appendChild(text);
-    const ruler = document.getElementById("ruler");
-    ruler.appendChild(span);
-    const stringWidth = ruler.clientWidth;
-    span.remove();
-    return stringWidth;
-}
+setInterval(commentDelete, commentDisplayTime);
