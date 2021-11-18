@@ -8,7 +8,7 @@
 
 <body>
 
-    <div src="../js/worker-dom.js" id="hello">
+    <div src="../js/worker-dom.js">
         <div id='placeholder'></div>
     </div>
 
@@ -70,10 +70,6 @@
             }
         }, commentDisplayTime);
 
-    </script>
-    <script type="module">
-        import { upgradeElement } from 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.index.mjs';
-        upgradeElement(document.getElementById('hello'), 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.worker.mjs');
     </script>
 </body>
 

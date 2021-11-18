@@ -4,13 +4,12 @@ const createComment = (strMessage, comment, row, index) => {
     row[index].speed = comment.speed;
     row[index].width = comment.width;
 
-    comment.flowRow = index;
     const div_text = document.createElement("div");
     div_text.setAttribute("class", "chat");
     div_text.setAttribute("id", "move");
     const placeholder = document.getElementById("placeholder");
     div_text.setAttribute("data-timelimit", `${comment.bornTime + commentDisplayTime}`)
-    div_text.style.top = commentHeight * comment.flowRow + 'px';
+    div_text.style.top = commentHeight * index + 'px';
     div_text.appendChild(document.createTextNode(strMessage));
     placeholder.appendChild(div_text);
 

@@ -1,10 +1,8 @@
 import measureStringWidth from "./measure.js";
-import createComment from "../gsap.js";
 
 const calcCommentRow = commentMessage => {
     const comment = {
         bornTime: Date.now(),
-        flowRow: 0,
         minCollisionWidth: commentMoveWidth,
         width: measureStringWidth(commentMessage),
         flag: false,
@@ -19,11 +17,11 @@ const calcCommentRow = commentMessage => {
 
         // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
         if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
-            createComment(commentMessage, comment, row, i);
-            break;
-
-        } else if (i == row.length - 1) {
+            return [commentMessage, comment, row, i];
+        }
+        if (i == row.length - 1) {
             console.log("コメントを流せませんでした");
+            return false;
         }
     }
 }
