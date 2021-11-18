@@ -1,7 +1,0 @@
-@charset "UTF-8";
-
-#ruler {
-    visibility: hidden;
-    position: absolute;
-    white-space: nowrap;
-}

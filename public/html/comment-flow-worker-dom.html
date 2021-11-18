@@ -2,17 +2,22 @@
 <html>
 
 <head>
-    <link rel="stylesheet" href="../css/css-version.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/commentMove.css">
 </head>
 
 <body>
+
     <div src="../js/worker-dom.js" id="hello">
         <div id='placeholder'></div>
     </div>
+
     <!-- 要素の幅を取得するために利用するDOM -->
     <span id="ruler"></span>
+
     <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
     <script src="/socket.io/socket.io.js"></script>
+
     <script type="text/javascript" src="../js/worker-dom.js"></script>
     <script>
         let socket = io();
@@ -46,7 +51,7 @@
             if (strMessage.length == 0) return;
 
             // 流れるコメントの作成
-            calcRow(strMessage);
+            calcCommentRow(strMessage);
         });
 
         window.onresize = () => {

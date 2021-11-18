@@ -1,0 +1,15 @@
+@charset "UTF-8";
+
+#move {
+    will-change: transform;
+    animation: commentMove 5s linear;
+}
+
+@keyframes commentMove {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-105%);
+    }
+}

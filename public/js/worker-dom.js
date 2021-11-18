@@ -1,5 +1,5 @@
-const calcRow = commentMessage => {
-    let comment = {
+const calcCommentRow = commentMessage => {
+    const comment = {
         bornTime: Date.now(),
         flowRow: 0,
         minCollisionWidth: commentMoveWidth,
@@ -14,13 +14,8 @@ const calcRow = commentMessage => {
         let rowCommentRightSide = row[i].speed * timeLag - row[i].width
         let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
 
-        // 行にコメントが存在していない時
-        if (timeLag >= commentDisplayTime) {
-            createComment(commentMessage, comment, row, i);
-            break;
-
-            // コメントが行の右側まで出ていて、衝突しない時
-        } else if (rowCommentRightSide >= 0 && collisionWidth <= 0) {
+        // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
+        if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
             createComment(commentMessage, comment, row, i);
             break;
 
@@ -38,7 +33,8 @@ const createComment = (strMessage, comment, row, index) => {
 
     comment.flowRow = index;
     const div_text = document.createElement("div");
-    div_text.setAttribute("class", "chat")
+    div_text.setAttribute("class", "chat");
+    div_text.setAttribute("id", "move");
     const placeholder = document.getElementById("placeholder");
     div_text.setAttribute("data-timelimit", `${comment.bornTime + commentDisplayTime}`)
     div_text.style.top = commentHeight * comment.flowRow + 'px';
