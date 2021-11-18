@@ -55,19 +55,19 @@ app.get("/gsap", (req, res) => {
     console.log("/ へのアクセスがありました")
     /*
         "/" にアクセスがあった時、res.sendFile()によって、
-        __dirname(このプログラムのディレクトリのパス)/gsap.htmlを渡す
+        __dirname(このプログラムのディレクトリのパス)/comment-flow-gsap.htmlを渡す
     */
-    res.sendFile(`${__dirname}/public/html/gsap.html`);
+    res.sendFile(`${__dirname}/public/html/comment-flow-gsap.html`);
 });
 
-app.get("/css-version", (req, res) => {
+app.get("/css", (req, res) => {
     console.log("CSS へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/css-version.html`);
+    res.sendFile(`${__dirname}/public/html/comment-flow-css.html`);
 });
 
 app.get("/worker-dom", (req, res) => {
     console.log("webworker へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/worker-dom.html`);
+    res.sendFile(`${__dirname}/public/html/comment-flow-worker-dom.html`);
 });
 
 app.get("/english", (req, res) => {
@@ -78,6 +78,6 @@ app.get("/english", (req, res) => {
 // サーバーの起動
 server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/gsap/`);
-    console.log(`listening on http://localhost:${port}/css-version/`);
+    console.log(`listening on http://localhost:${port}/css/`);
     console.log(`listening on http://localhost:${port}/worker-dom/`);
 });
