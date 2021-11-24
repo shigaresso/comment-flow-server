@@ -23,4 +23,4 @@ socket.on('spread message', (strMessage) => {
     createComment(message, text, row, index);
 });
 
-setInterval(commentDelete, commentDisplayTime);
+// setInterval(commentDelete, commentDisplayTime);

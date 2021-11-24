@@ -5,14 +5,16 @@ const createComment = (strMessage, comment, row, index) => {
     row[index].width = comment.width;
 
     const div_text = document.createElement("div");
-    div_text.setAttribute("class", "chat");
-    div_text.setAttribute("id", "move");
-    const placeholder = document.getElementById("placeholder");
+    div_text.className = "comment";
+    const placeholder = document.getElementById(`row${index}`);
     div_text.setAttribute("data-timelimit", `${comment.bornTime + commentDisplayTime}`)
-    div_text.style.top = commentHeight * index + 'px';
-    div_text.appendChild(document.createTextNode(strMessage));
+    // div_text.appendChild(document.createTextNode(strMessage));
+    div_text.innerText = strMessage;
     placeholder.appendChild(div_text);
 
+    setTimeout(() => {
+        div_text.remove();
+    },commentDisplayTime);
 }
 
 export default createComment;
