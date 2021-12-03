@@ -9,18 +9,24 @@ const cors = require("cors");
 // インスタンス化
 const app = express();
 const server = http.Server(app);
-const io = socketIO(server)
+const io = socketIO(server, {
+    cors: {
+        origin: /https?:\/\/(localhost:3000|www.(openrec.tv|twitch.tv|youtube.com))/,
+        methods: ["GET", "POST"],
+    }
+})
 
 // サーバーのポート番号
 const port = 10010;
 
-// corのオプション設定
-const corsOption = {
-    origin: /https:\/\/www.(openrec.tv|youtube.com|twitch.tv)/
-}
 
 // corsの許可、POSTでjsonを受け取るのに必要
-app.use(cors(corsOption), express.urlencoded({ extended: true }), express.json(), express.static("public"));
+app.use(
+    cors(),
+    express.urlencoded({ extended: true }),
+    express.json(),
+    express.static("public")
+);
 
 // socket.io接続時、及びその後の処理
 io.on("connection", (socket) => {
@@ -75,6 +81,11 @@ app.get("/web-worker", (req, res) => {
 app.get("/test", (req, res) => {
     console.log("test へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/comment-flow-web-worker.html`);
+});
+
+app.get("/react", (req, res) => {
+    console.log("react へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/react.html`);
 });
 
 // サーバーの起動
