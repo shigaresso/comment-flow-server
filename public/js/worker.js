@@ -1,5 +1,5 @@
-import createComment from "../js/modules/createComment.js";
-import measureStringWidth from "../js/modules/measure.js";
+import createComment from "./modules/createComment.js";
+import measureStringWidth from "./modules/measure.js";
 
 const socket = io();
 
@@ -8,7 +8,7 @@ socket.on('connect', () => {
     console.log("socket.ioに接続しました");
 });
 
-const myWorker = new Worker("../html/worker.js");
+const myWorker = new Worker("../js/worker-thread.js");
 // サーバーからのメッセージ拡散に対する処理
 socket.on('spread message', (strMessage) => {
     // OPENRECのコメントがスタンプの場合は処理しない
@@ -26,7 +26,7 @@ socket.on('spread message', (strMessage) => {
         myWorker.postMessage({"text": strMessage, "commentWidth": commentWidth, "commentMoveWidth": commentMoveWidth, "commentDisplayTime": commentDisplayTime, "row": row});
         
         
-        console.log('web-workerに送信済み');
+        // console.log('web-workerに送信済み');
     }
     // createComment(message, text, row, index);
 });
