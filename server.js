@@ -63,19 +63,24 @@ app.get("/gsap", (req, res) => {
         "/" にアクセスがあった時、res.sendFile()によって、
         __dirname(このプログラムのディレクトリのパス)/comment-flow-gsap.htmlを渡す
     */
-    res.sendFile(`${__dirname}/public/html/comment-flow-gsap.html`);
+    res.sendFile(`${__dirname}/public/html/gsap.html`);
 });
 
 app.get("/css", (req, res) => {
     console.log("CSS へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/comment-flow-css.html`);
+    res.sendFile(`${__dirname}/public/html/css.html`);
 });
 
 app.get("/web-worker", (req, res) => {
     console.log("webworker へのアクセスがありました")
-    // res.sendFile(`${__dirname}/public/html/comment-flow-web-worker.html`);
-    res.sendFile(`${__dirname}/public/html/comment-flow-css.html`);
+    res.sendFile(`${__dirname}/public/html/web-worker.html`);
+    // res.sendFile(`${__dirname}/public/html/comment-flow-css.html`);
 
+});
+
+app.get("/worker-dom", (req, res) => {
+    console.log("worker-dom へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/worker-dom.html`);
 });
 
 app.get("/test", (req, res) => {
@@ -90,8 +95,9 @@ app.get("/react", (req, res) => {
 
 // サーバーの起動
 server.listen(port, () => {
-    console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/css/`);
+    console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/web-worker/`);
+    console.log(`listening on http://localhost:${port}/worker-dom/`);
     console.log(`listening on http://localhost:${port}/test/`);
 });
