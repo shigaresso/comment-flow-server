@@ -12,9 +12,10 @@ const createComment = (strMessage, comment, row, index) => {
     div_text.innerText = strMessage;
     placeholder.appendChild(div_text);
 
-    setTimeout(() => {
-        div_text.remove();
-    },commentDisplayTime);
+    // setTimeout(() => {
+    //     div_text.remove();
+    // },commentDisplayTime);
+    div_text.addEventListener("animationend",()=>div_text.remove());
 }
 
 export default createComment;
