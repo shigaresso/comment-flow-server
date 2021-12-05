@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/commentMove.css">
+</head>
+
+<body>
+
+    <div src="../js/worker-dom.js" id="placeholder">
+    </div>
+    <span id="ruler"></span>
+    <script type="text/javascript" src="../js/state.js"></script>
+    <script type="module">
+        import { io } from "https://cdn.socket.io/4.3.2/socket.io.esm.min.js";
+        import { upgradeElement } from 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.index.mjs';
+        
+        import calcCommentRow from "../js/modules/calcCommentRow.js";
+        import createComment from "../js/modules/createComment.js";
+
+        upgradeElement(document.getElementById('placeholder'), 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.worker.mjs');
+        
+    </script>
+
+</body>
+
+</html>
