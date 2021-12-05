@@ -20,7 +20,18 @@
         import createComment from "../js/modules/createComment.js";
 
         upgradeElement(document.getElementById('placeholder'), 'https://unpkg.com/@ampproject/worker-dom@0.2.8/dist/unminified.worker.mjs');
-        
+        const socket = io();
+
+        socket.on('spread message', (strMessage) => {
+            // OPENRECのコメントがスタンプの場合は処理しない
+            if (strMessage.length == 0) return;
+            const a = calcCommentRow(strMessage);
+            if (!a) {
+                return;
+            }
+            const [message, text, row, index] = a;
+            createComment(message, text, row, index);
+        });
     </script>
 
 </body>
