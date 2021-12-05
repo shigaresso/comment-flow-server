@@ -1,5 +1,4 @@
 import calcCommentRow from "./modules/calcCommentRow.js";
-import commentDelete from "./modules/commentDelete.js";
 import createComment from "./modules/createComment.js";
 
 const socket = io();
@@ -15,11 +14,8 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    const a = calcCommentRow(strMessage);
-    if (!a) {
-        return;
-    }
-    const [message, text, row, index] = a;
+    const [message, text, row, index] = calcCommentRow(strMessage);
+    if (!message) return;
     createComment(message, text, row, index);
 });
 

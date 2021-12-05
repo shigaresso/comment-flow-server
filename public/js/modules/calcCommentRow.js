@@ -21,7 +21,7 @@ const calcCommentRow = commentMessage => {
         }
         if (i == row.length - 1) {
             console.log("コメントを流せませんでした");
-            return false;
+            return [null, null, null, null];
         }
     }
 }
