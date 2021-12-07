@@ -31,5 +31,4 @@ body {
 .row {
     height: var(--rowHeight);
     font-size: var(--rowHeight);
-    
 }
