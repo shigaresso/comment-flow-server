@@ -66,6 +66,11 @@ app.get("/gsap", (req, res) => {
     res.sendFile(`${__dirname}/public/html/gsap.html`);
 });
 
+app.get("/canvas", (req, res) => {
+    console.log("canvas へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/canvas.html`);
+});
+
 app.get("/css", (req, res) => {
     console.log("CSS へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/css.html`);
@@ -95,6 +100,7 @@ app.get("/react", (req, res) => {
 
 // サーバーの起動
 server.listen(port, () => {
+    console.log(`listening on http://localhost:${port}/canvas/`);
     console.log(`listening on http://localhost:${port}/css/`);
     console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/web-worker/`);
