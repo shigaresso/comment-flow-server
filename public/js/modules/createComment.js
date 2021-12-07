@@ -1,8 +1,8 @@
-const createComment = (strMessage, comment, row, index) => {
+const createComment = (strMessage, comment, rows, index) => {
     // 次、この行にコメントが流れる為の条件についての情報
-    row[index].bornTime = comment.bornTime;
-    row[index].speed = comment.speed;
-    row[index].width = comment.width;
+    rows[index].bornTime = comment.bornTime;
+    rows[index].speed = comment.speed;
+    rows[index].width = comment.width;
 
     const div_text = document.createElement("div");
     div_text.className = "comment";
@@ -15,7 +15,7 @@ const createComment = (strMessage, comment, row, index) => {
     // setTimeout(() => {
     //     div_text.remove();
     // },commentDisplayTime);
-    div_text.addEventListener("animationend",()=>div_text.remove());
+    div_text.addEventListener("animationend", () => div_text.remove());
 }
 
 export default createComment;

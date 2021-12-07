@@ -13,19 +13,24 @@ const myWorker = new Worker("../js/worker-thread.js");
 socket.on('spread message', (strMessage) => {
     // OPENRECのコメントがスタンプの場合は処理しない
     if (strMessage.length == 0) return;
-    
+
     const commentWidth = measureStringWidth(strMessage);
-    
+
     if (window.Worker) {
-        
+
         // 流れるコメントの作成
 
         // path の書き方を奇妙にしないと上手くいかない (path: worker.js) だと失敗する
         // Web-Worker へ送信する
         // console.log(worker);
-        myWorker.postMessage({"text": strMessage, "commentWidth": commentWidth, "commentMoveWidth": commentMoveWidth, "commentDisplayTime": commentDisplayTime, "row": row});
-        
-        
+        myWorker.postMessage({
+            "text": strMessage,
+            "commentWidth": commentWidth,
+            "commentMoveWidth": commentMoveWidth,
+            "commentDisplayTime": commentDisplayTime, "row": rows
+        });
+
+
         // console.log('web-workerに送信済み');
     }
     // createComment(message, text, row, index);

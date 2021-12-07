@@ -13,17 +13,17 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    const [message, text, row, index] = calcCommentRow(strMessage);
+    const [message, text, rows, index] = calcCommentRow(strMessage);
     if (!message) return;
-    createComment(message, text, row, index);
+    createComment(message, text, rows, index);
 });
 
 
-const createComment = async (strMessage, comment, row, index) => {
+const createComment = async (strMessage, comment, rows, index) => {
     // 次、この行にコメントが流れる為の条件についての情報
-    row[index].bornTime = comment.bornTime;
-    row[index].speed = comment.speed;
-    row[index].width = comment.width;
+    rows[index].bornTime = comment.bornTime;
+    rows[index].speed = comment.speed;
+    rows[index].width = comment.width;
 
     const div_text = document.createElement("div");
     div_text.innerText = strMessage;
@@ -47,4 +47,3 @@ const createComment = async (strMessage, comment, row, index) => {
 
     div_text.remove();
 }
-

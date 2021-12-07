@@ -28,7 +28,12 @@ onmessage = e => {
             rows[i].bornTime = comment.bornTime;
             rows[i].speed = comment.speed;
             rows[i].width = comment.width;
-            postMessage({"text": e.data.text, "comment": comment, "row": e.data.row, "index":i});
+            postMessage({
+                "text": e.data.text,
+                "comment": comment,
+                "row": e.data.row,
+                "index": i
+            });
             return
         }
         if (i == e.data.row.length - 1) {

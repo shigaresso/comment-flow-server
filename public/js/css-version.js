@@ -14,9 +14,9 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    const [message, text, row, index] = calcCommentRow(strMessage);
+    const [message, text, rows, index] = calcCommentRow(strMessage);
     if (!message) return;
-    createComment(message, text, row, index);
+    createComment(message, text, rows, index);
 });
 
 // setInterval(commentDelete, commentDisplayTime);
