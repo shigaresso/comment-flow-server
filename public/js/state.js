@@ -26,14 +26,13 @@ const commentDisplayTime = 5000;
 let count = 0;
 
 // 各行の情報を持つ配列の作成
-const rows = Array(windowDevided);
-for (let i = 0; i < windowDevided; i++) {
-    rows[i] = {
+const rows = Array(windowDevided)
+    .fill()
+    .map(e => ({
         bornTime: 0,
         speed: 0,
         width: 0,
-    }
-}
+    }));
 
 window.onresize = () => {
     [commentHeight, commentMoveWidth] = calcWindowSize();
