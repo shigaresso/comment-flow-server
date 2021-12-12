@@ -3,9 +3,7 @@ import measureStringWidth from "./measure.js";
 const calcCommentRow = commentMessage => {
     const comment = {
         bornTime: Date.now(),
-        minCollisionWidth: commentMoveWidth,
         width: measureStringWidth(commentMessage),
-        flag: false,
     };
     comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
 
