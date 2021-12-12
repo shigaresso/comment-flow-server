@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .comment {
-    will-change: transform;
+    
     animation: commentMove 5s linear;
     align-self: stretch;
     /* これをつけることによって移動が終わっても画面から消えたところで固定される */
@@ -17,9 +17,11 @@
 
 @keyframes commentMove {
     0% {
+        will-change: transform;
         transform: translateX(0%);
     }
     100% {
+        will-change: unset;
         transform: translateX(-105%);
     }
 }
