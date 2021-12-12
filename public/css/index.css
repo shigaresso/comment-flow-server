@@ -29,6 +29,7 @@ body {
 }
 
 .row {
+    color: white;
     height: var(--rowHeight);
     font-size: var(--rowHeight);
 }

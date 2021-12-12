@@ -1,12 +1,10 @@
 @charset "UTF-8";
 
 .comment {
-    
     animation: commentMove 5s linear;
     align-self: stretch;
     /* これをつけることによって移動が終わっても画面から消えたところで固定される */
     animation-fill-mode: forwards;
-    color: rgb(255, 255, 255);
     /* テキストの位置 */
     line-height: 1em;
     /* これを付けることで文字を右端からスタートさせる */
