@@ -13,18 +13,13 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    const [message, text, rows, index] = calcCommentRow(strMessage);
+    const [message, comment, index] = calcCommentRow(strMessage);
     if (!message) return;
-    createComment(message, text, rows, index);
+    createComment(message, comment.width, index);
 });
 
 
-const createComment = async (strMessage, comment, rows, index) => {
-    // 次、この行にコメントが流れる為の条件についての情報
-    rows[index].bornTime = comment.bornTime;
-    rows[index].speed = comment.speed;
-    rows[index].width = comment.width;
-
+const createComment = async (strMessage, comment, index) => {
     const div_text = document.createElement("div");
     div_text.innerText = strMessage;
     count = count % 100000;
@@ -40,7 +35,7 @@ const createComment = async (strMessage, comment, rows, index) => {
     // GSAP によるアニメーション
     await gsap.to("#" + div_text.id, {
         duration: 5,
-        x: -1 * (document.documentElement.clientWidth + comment.width + 10),
+        x: -1 * (document.documentElement.clientWidth + comment + 10),
         ease: "linear",
         force3D: true,
     });

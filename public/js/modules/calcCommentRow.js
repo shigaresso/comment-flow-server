@@ -15,11 +15,13 @@ const calcCommentRow = commentMessage => {
 
         // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
         if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
-            return [commentMessage, comment, rows, i];
+            // 次、この行にコメントが流れる為の条件についての情報
+            rows[i] = comment;
+            return [commentMessage, comment, i];
         }
         if (i == rows.length - 1) {
             console.log("コメントを流せませんでした");
-            return [null, null, null, null];
+            return [null, null, null];
         }
     }
 }
