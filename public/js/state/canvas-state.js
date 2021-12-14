@@ -27,7 +27,7 @@ let context = canvas.getContext('2d');
 const fps = 60;
 const height = Math.floor(canvas.height / windowDevided);
 context.textBaseline = "top";
-context.textAlign = "start"
+context.textAlign = "end"
 context.font = `900 ${height}px Segoe UI Emoji`;
 context.fillStyle = "white";
 // 縁取り部分のテキストを尖らないようにする
@@ -71,11 +71,11 @@ const createCommentForCanvas = (comment) => {
         let relativeSpeed = tempCommentProperty.speed - rowProperties[i].speed;
         let rowCommentRightSide = rowProperties[i].speed * timeLag - rowProperties[i].width;
         let collisionWidth = relativeSpeed * (commentDisplayTime_ms - timeLag) - rowCommentRightSide;
-        
+
         if (timeLag >= commentDisplayTime_ms || rowCommentRightSide >= 0 && collisionWidth <= 0) {
             // コメント作成作業
-            const move = 1000*moveWidth/commentDisplayTime_ms/fps
-            console.log(moveWidth ,move)
+            const move = 1000 * moveWidth / commentDisplayTime_ms / fps
+            console.log(moveWidth, move)
             rowProperties[i] = tempCommentProperty;
             commentList.push(new Comment(comment, moveWidth, height * i, move));
             return;
@@ -83,16 +83,8 @@ const createCommentForCanvas = (comment) => {
     }
 }
 
-/*
-    1回の更新でどれだけ動くのか？
-    まず　５秒間で1920とコメント幅分移動しないといけない
-    それは以下の様に表現される
-    1920+tempCommentProperty.Width
-    5で割れば１秒の間隔になる
-    そこをfpsで割れば１フレームになる
-*/
 
-setInterval(drawNextFrame, 1000/fps);
+setInterval(drawNextFrame, Math.floor(1000 / fps));
 
 const socket = io();
 
