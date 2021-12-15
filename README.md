@@ -1,7 +1,9 @@
 ## ブランチのバージョンについて
-
+- ver 4.0
+canvas 版の HTML も完成。
 - ver 3.0  
-CSS, GSAP, Worker-DOM の 3 種類の HTML を作成。  
+CSS, GSAP, Worker-DOM の 3 種類の HTML を作成。 
+ただし、Worker-DOM は正しく動作してない事が後で判明した。   
 JavaScript をモジュール化した。  
 - ver 2.0  
 コメントの移動方式を CSS -> GSAP に変更。  
