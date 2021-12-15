@@ -7,10 +7,10 @@ const calcCommentRow = commentMessage => {
     };
     comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
 
-    for (let i = 0; i < rows.length; i++) {
-        const relativeSpeed = comment.speed - rows[i].speed;
-        const timeLag = comment.bornTime - rows[i].bornTime;
-        const rowCommentRightSide = rows[i].speed * timeLag - rows[i].width
+    for (const [i, row] of rows.entries()) {
+        const relativeSpeed = comment.speed - row.speed;
+        const timeLag = comment.bornTime - row.bornTime;
+        const rowCommentRightSide = row.speed * timeLag - row.width
         const collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
 
         // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
@@ -22,7 +22,9 @@ const calcCommentRow = commentMessage => {
         if (i == rows.length - 1) {
             console.log("コメントを流せませんでした");
             return [null, null, null];
+
         }
+
     }
 }
 
