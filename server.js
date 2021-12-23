@@ -76,6 +76,11 @@ app.get("/css", (req, res) => {
     res.sendFile(`${__dirname}/public/html/css.html`);
 });
 
+app.get("/pixi-js", (req, res) => {
+    console.log("Pixi.js へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/pixi-js.html`);
+});
+
 app.get("/web-worker", (req, res) => {
     console.log("webworker へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/web-worker.html`);
@@ -103,6 +108,7 @@ server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/canvas/`);
     console.log(`listening on http://localhost:${port}/css/`);
     console.log(`listening on http://localhost:${port}/gsap/`);
+    console.log(`listening on http://localhost:${port}/pixi-js/`);
     console.log(`listening on http://localhost:${port}/web-worker/`);
     console.log(`listening on http://localhost:${port}/worker-dom/`);
     console.log(`listening on http://localhost:${port}/test/`);
