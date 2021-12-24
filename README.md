@@ -1,5 +1,7 @@
 ## ブランチのバージョンについて
-- ver 4.0
+- ver 5.0  
+ Pixi.js 版の作成完了。  
+- ver 4.0  
 canvas 版の HTML も完成。
 - ver 3.0  
 CSS, GSAP, Worker-DOM の 3 種類の HTML を作成。 

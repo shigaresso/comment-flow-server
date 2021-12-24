@@ -1,20 +1,7 @@
 import calcCommentRow from "./modules/calcCommentRow.js";
+import { Comment } from "./class/pixi-comment.js";
 
 const commentList = [];
-class Comment {
-    // Comment クラスの配列
-
-    constructor(pixiInstance, move) {
-        this.pixiInstance = pixiInstance; // Text のインスタンス
-        this.move = move; // 1 フレームの移動量
-    }
-
-    // フレームの更新処理
-    render() {
-        this.pixiInstance.position.x -= this.move;
-    }
-}
-
 
 const app = new PIXI.Application({
     width: commentMoveWidth,
@@ -34,15 +21,6 @@ const style = new PIXI.TextStyle({
     stroke: 0x000000, // テキストの縁取りの色
 });
 
-const scoreText = new PIXI.Text('score: 0', style);
-const textMetrics = PIXI.TextMetrics.measureText('score: 0', style);
-console.log(scoreText.width);
-
-let x = commentMoveWidth;
-scoreText.position.x = x; // scoreText の x 座標
-scoreText.position.y = 0; // scoreText の y 座標
-app.stage.addChild(scoreText);
-
 const socket = io();
 
 // 接続時の処理
@@ -59,21 +37,18 @@ socket.on('spread message', (strMessage) => {
     const [message, comment, index] = calcCommentRow(strMessage);
     if (!message) return;
     const text = new PIXI.Text(strMessage, style);
-    text.position.x = commentMoveWidth
-    text.position.y = commentHeight * index
+    text.position.x = commentMoveWidth // scoreText の x 座標
+    text.position.y = commentHeight * index // scoreText の y 座標
     app.stage.addChild(text)
-    const speed = Math.floor(comment.speed * 1000 / 60)
+    let speed = Math.floor(comment.speed * 1000 / 60)
+    console.log(speed)
     commentList.push(new Comment(text, speed))
 });
 
-// x 座標の移動
+// フレーム毎の x 座標の移動
 const render = () => {
     commentList.forEach(instance => {
-        instance.render();
-        if (instance.pixiInstance.position.x < -instance.pixiInstance.width - 1000) {
-            commentList.shift();
-            return;
-        }
+        instance.render(commentList);
     });
     requestAnimationFrame(render);
 }
