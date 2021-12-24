@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        :root {
+            font-family: "Segoe UI Emoji", "MS P ゴシック";
+            /* font-size: 9vh; */
+            font-weight: 900;
+            --windowDevided: 11;
+            --rowHeight: calc(100vh/var(--windowDevided));
+        }
+
+        body {
+            background-color: green;
+        }
+
+        #ruler {
+            visibility: hidden;
+            position: absolute;
+            white-space: nowrap;
+            font-size: var(--rowHeight);
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.1/pixi.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <div id="placeholder"></div>
+    <span id="ruler"></span>
+    <script type="text/javascript" src="../js/state.js"></script>
+    <script type="module" src="../js/pixi.js"></script>
+</body>
+
+</html>
