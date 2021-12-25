@@ -9,8 +9,8 @@
     font-family: "Segoe UI Emoji", "MS P ゴシック";
     /* font-size: 9vh; */
     font-weight: 900;
-    --windowDevided: 11;
-    --rowHeight: calc(100vh/var(--windowDevided));
+    --commentLane: 11;
+    --rowHeight: calc(100vh/var(--commentLane));
 }
 
 body {
