@@ -12,6 +12,13 @@
     <span id="ruler"></span>
     <!-- /socket.io/socket.io.js は自動で生成されるので作成する必要はない -->
     <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let instance;
+    </script>
+    <script type="module">
+        import { Css } from "../js/class/css.js";
+        instance = new Css(11, 5000);
+    </script>
     <script type="module" src="../js/css-version.js"></script>
 </body>
 

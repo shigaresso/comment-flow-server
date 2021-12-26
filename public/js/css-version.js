@@ -1,9 +1,6 @@
-import { Css } from "./class/css.js";
-import calcCommentRow from "./modules/calcCommentRow.js";
 import createComment from "./modules/createComment.js";
 
 const socket = io();
-const instance = new Css(11, 5000);
 
 // 接続時の処理
 socket.on('connect', () => {
