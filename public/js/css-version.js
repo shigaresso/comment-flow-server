@@ -1,5 +1,3 @@
-import createComment from "./modules/createComment.js";
-
 const socket = io();
 
 // 接続時の処理
@@ -15,5 +13,5 @@ socket.on('spread message', (strMessage) => {
     // 流れるコメントの作成
     const [message, comment, index] = instance.calcCommentRow(strMessage);
     if (!message) return;
-    createComment(message, comment.bornTime, index);
+    instance.createComment(message, comment.bornTime, index);
 });
