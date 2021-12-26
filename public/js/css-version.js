@@ -11,7 +11,5 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    const [message, comment, index] = instance.calcCommentRow(strMessage);
-    if (!message) return;
-    instance.createComment(message, comment.bornTime, index);
+    instance.createComment(strMessage);
 });
