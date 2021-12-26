@@ -1,5 +1,4 @@
 import { DisplayProperty } from "./displayProperty.js";
-import measureStringWidth from "../modules/measure.js";
 
 export class CreateCommentLaneHtml extends DisplayProperty {
 
@@ -16,35 +15,19 @@ export class CreateCommentLaneHtml extends DisplayProperty {
         }
     }
 
-    calcCommentRow(commentMessage) {
-        const commentDisplayTime = this.getCommentDisplayTime();
-        const [commentMoveWidth, commentHeight] = this.getWindowSize();
-
-        const comment = {
-            bornTime: Date.now(),
-            width: measureStringWidth(commentMessage),
-        };
-        comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
-
-        for (const [index, row] of this.rows.entries()) {
-            const relativeSpeed = comment.speed - row.speed;
-            const timeLag = comment.bornTime - row.bornTime;
-            const rowCommentRightSide = row.speed * timeLag - row.width
-            const collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
-            // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
-            if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
-                // 次、この行にコメントが流れる為の条件についての情報
-                this.rows[index] = comment;
-                return {
-                    commentMessage,
-                    comment,
-                    index,
-                };
-            }
-            if (index == this.rows.length - 1) {
-                console.log("コメントを流せませんでした");
-                return {comment: null};
-            }
-        }
+    /**
+    * コメントが画面幅+コメント幅移動するので、コメント幅を調べる為の関数
+    * @param {コメントにする文字列} string 
+    * @returns 描画される文字列のピクセル幅
+    */
+    measureStringWidth(string) {
+        const span = document.createElement("span");
+        const text = document.createTextNode(string);
+        span.appendChild(text);
+        const ruler = document.getElementById("ruler");
+        ruler.appendChild(span);
+        const stringWidth = ruler.clientWidth;
+        span.remove();
+        return stringWidth;
     }
 }
