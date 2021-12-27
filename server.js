@@ -88,21 +88,6 @@ app.get("/web-worker", (req, res) => {
 
 });
 
-app.get("/worker-dom", (req, res) => {
-    console.log("worker-dom へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/worker-dom.html`);
-});
-
-app.get("/test", (req, res) => {
-    console.log("test へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/comment-flow-web-worker.html`);
-});
-
-app.get("/react", (req, res) => {
-    console.log("react へのアクセスがありました")
-    res.sendFile(`${__dirname}/public/html/react.html`);
-});
-
 // サーバーの起動
 server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/canvas/`);
@@ -110,6 +95,4 @@ server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/pixi-js/`);
     console.log(`listening on http://localhost:${port}/web-worker/`);
-    console.log(`listening on http://localhost:${port}/worker-dom/`);
-    console.log(`listening on http://localhost:${port}/test/`);
 });
