@@ -14,32 +14,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         let instance;
-        const commentList = [];
-
-        /**
-        * @type {HTMLCanvasElement}
-        */
-        const canvas = document.getElementById('placeholder');
-        let context = canvas.getContext('2d')
-
-        const windowDevided = 11;
-        const height = Math.floor(canvas.height / windowDevided);
-        context.textBaseline = "top";
-        context.textAlign = "end"
-        context.font = `900 ${height}px Segoe UI Emoji`;
-        context.fillStyle = "white";
-        // 縁取り部分のテキストを尖らないようにする
-        context.lineJoin = "round";
-        context.lineWidth = 13;
-
-        const fps = 60;
-
     </script>
     <script type="module">
         import { CanvasState } from "../js/class/canvas.js";
         instance = new CanvasState(11, 5000);
 
-        setInterval(() => instance.drawNextFrame(commentList), Math.floor(1000 / fps));
+        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
     </script>
     <script type="module" src="../js/renderCommentToHtml.js"></script>
 </body>

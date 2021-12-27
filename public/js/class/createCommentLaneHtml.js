@@ -1,6 +1,6 @@
 import { DisplayProperty } from "./displayProperty.js";
 
-export class CreateCommentLaneHtml extends DisplayProperty {
+class CreateCommentLaneHtml extends DisplayProperty {
 
     constructor(commentLane, commentDisplayTime) {
         super(commentLane, commentDisplayTime);
@@ -31,3 +31,5 @@ export class CreateCommentLaneHtml extends DisplayProperty {
         return stringWidth;
     }
 }
+
+export { CreateCommentLaneHtml };

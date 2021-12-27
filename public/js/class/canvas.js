@@ -21,53 +21,46 @@ class Comment {
 class CanvasState extends DisplayProperty {
     constructor(commentLane, commentDisplayTime) {
         super(commentLane, commentDisplayTime);
+        /**
+        * @type {HTMLCanvasElement}
+        */
+        this.canvas = document.getElementById('placeholder');
+        this.context = this.canvas.getContext('2d')
+
+        this.height = Math.floor(this.canvas.height / this.getCommentLane());
+        this.context.textBaseline = "top";
+        this.context.textAlign = "end"
+        this.context.font = `900 ${this.height}px Segoe UI Emoji`;
+        this.context.fillStyle = "white";
+        // 縁取り部分のテキストを尖らないようにする
+        this.context.lineJoin = "round";
+        this.context.lineWidth = 13;
+        this.fps = 60;
+        this.commentList = [];
     }
 
     #measureStringWidth(comment) {
-        return Math.round(context.measureText(comment).width);
+        return Math.round(this.context.measureText(comment).width);
     }
 
     createComment(commentMessage) {
-        // コメントを流す場合に流す行を更新するのに必要なプロパティ
-        const commentDisplayTime = this.getCommentDisplayTime();
+        const commentProperty = this.calcCommentRow(commentMessage, this.#measureStringWidth(commentMessage));
+        if (!commentProperty.comment) return;
         const [commentMoveWidth, commentHeight] = this.getWindowSize();
+        const moveWidth = commentMoveWidth + commentProperty.comment.width;
+        const move = commentProperty.comment.speed * 1000 / this.fps;
+        this.commentList.push(new Comment(commentMessage, moveWidth, commentHeight * commentProperty.index, move));
 
-        const comment = {
-            bornTime: Date.now(),
-            width: this.#measureStringWidth(commentMessage),
-        }
-        comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
-
-
-        const moveWidth = commentMoveWidth + comment.width;
-        for (let i = 0; i < this.getCommentLane(); i++) {
-            let timeLag = comment.bornTime - this.rows[i].bornTime;
-            let relativeSpeed = comment.speed - this.rows[i].speed;
-            let rowCommentRightSide = this.rows[i].speed * timeLag - this.rows[i].width;
-            let collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
-
-            if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
-                // コメント作成作業
-                const move = comment.speed * 1000 / fps;
-                console.log(moveWidth, move)
-                this.rows[i] = comment;
-                console.log(new Comment(commentMessage, moveWidth, commentHeight * i, move))
-                commentList.push(new Comment(commentMessage, moveWidth, commentHeight * i, move));
-                return;
-            }
-        }
     }
 
-    drawNextFrame(commentList) {
-        // console.log(commentList)
-
+    drawNextFrame() {
         // Canvas 画面のクリア
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // コメントを１フレーム進める処理
-        commentList.forEach(comment => {
+        this.commentList.forEach(comment => {
             comment.update();
-            if (comment.x <= 0) commentList.shift();
-            comment.render(context);
+            if (comment.x <= 0) this.commentList.shift();
+            comment.render(this.context);
         });
     }
 }

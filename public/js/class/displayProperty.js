@@ -1,4 +1,4 @@
-export class DisplayProperty {
+class DisplayProperty {
     // コメントを何行流すかの設定
     #commentLane;
     // コメントが何秒で流れきるかの設定
@@ -84,3 +84,5 @@ export class DisplayProperty {
         }
     }
 }
+
+export { DisplayProperty };

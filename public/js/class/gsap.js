@@ -1,6 +1,6 @@
 import { CreateCommentLaneHtml } from "./createCommentLaneHtml.js";
 
-export class Gsap extends CreateCommentLaneHtml {
+class Gsap extends CreateCommentLaneHtml {
     // コメントの流れた数(GSAP でコメントを移動させる場合、IDが必要になるため、そのIDとして利用する)
     #gsapCount;
 
@@ -40,3 +40,5 @@ export class Gsap extends CreateCommentLaneHtml {
         div_text.remove();
     }
 }
+
+export { Gsap };

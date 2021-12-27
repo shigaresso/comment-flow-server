@@ -1,6 +1,6 @@
 import { CreateCommentLaneHtml } from "./createCommentLaneHtml.js";
 
-export class Css extends CreateCommentLaneHtml {
+class Css extends CreateCommentLaneHtml {
 
     constructor(commentLane, commentDisplayTime) {
         super(commentLane, commentDisplayTime);
@@ -16,7 +16,9 @@ export class Css extends CreateCommentLaneHtml {
         const placeholder = document.getElementById(`row${commentProperty.index}`);
         div_text.innerText = strMessage;
         placeholder.appendChild(div_text);
-    
+
         div_text.addEventListener("animationend", () => div_text.remove());
     }
 }
+
+export { Css };
