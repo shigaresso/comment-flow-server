@@ -23,18 +23,18 @@ class CanvasState extends DisplayProperty {
         super(commentLane, commentDisplayTime);
     }
 
-    measureStringWidth(comment) {
+    #measureStringWidth(comment) {
         return Math.round(context.measureText(comment).width);
     }
 
-    createComment(commentMessage, width) {
+    createComment(commentMessage) {
         // コメントを流す場合に流す行を更新するのに必要なプロパティ
         const commentDisplayTime = this.getCommentDisplayTime();
         const [commentMoveWidth, commentHeight] = this.getWindowSize();
 
         const comment = {
             bornTime: Date.now(),
-            width,
+            width: this.#measureStringWidth(commentMessage),
         }
         comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
 

@@ -15,8 +15,8 @@ export class Gsap extends CreateCommentLaneHtml {
         return this.#gsapCount;
     }
 
-    async createComment(strMessage, width) {
-        const commentProperty = this.calcCommentRow(strMessage, width);
+    async createComment(strMessage) {
+        const commentProperty = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
         if (!commentProperty.comment) return;
 
         const div_text = document.createElement("div");

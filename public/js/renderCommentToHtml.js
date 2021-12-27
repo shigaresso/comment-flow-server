@@ -11,5 +11,5 @@ socket.on('spread message', (strMessage) => {
     if (strMessage.length == 0) return;
 
     // 流れるコメントの作成
-    instance.createComment(strMessage, instance.measureStringWidth(strMessage));
+    instance.createComment(strMessage);
 });

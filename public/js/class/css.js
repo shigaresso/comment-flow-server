@@ -8,8 +8,8 @@ export class Css extends CreateCommentLaneHtml {
         document.documentElement.style.setProperty('--commentLane', this.getCommentLane());
     }
 
-    createComment(strMessage, width) {
-        const commentProperty = this.calcCommentRow(strMessage, width);
+    createComment(strMessage) {
+        const commentProperty = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
         if (!commentProperty.comment) return;
         const div_text = document.createElement("div");
         div_text.className = "comment";
