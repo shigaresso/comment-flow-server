@@ -11,24 +11,9 @@
             margin: 0px;
             padding: 0px;
         }
-
-        :root {
-            font-family: "Segoe UI Emoji", "MS P ゴシック";
-            /* font-size: 9vh; */
-            font-weight: 900;
-            --windowDevided: 11;
-            --rowHeight: calc(100vh/var(--windowDevided));
-        }
-
+        
         body {
             background-color: green;
-        }
-
-        #ruler {
-            visibility: hidden;
-            position: absolute;
-            white-space: nowrap;
-            font-size: var(--rowHeight);
         }
     </style>
 </head>
@@ -37,9 +22,16 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.1/pixi.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <div id="placeholder"></div>
-    <span id="ruler"></span>
-    <script type="text/javascript" src="../js/state.js"></script>
-    <script type="module" src="../js/pixi.js"></script>
+    <script>
+        let instance;
+    </script>
+    <script type="module">
+        import { Pixi_js } from "../js/class/pixi.js";
+        instance = new Pixi_js(11, 5000);
+        // requestAnimationFrame(instance.render);
+        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
+    </script>
+    <script type="module" src="../js/renderCommentToHtml.js"></script>
 </body>
 
 </html>
