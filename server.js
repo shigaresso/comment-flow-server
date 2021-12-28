@@ -28,6 +28,9 @@ app.use(
     express.static("public")
 );
 
+// これで /socket.io-client/〇〇 と記述すれば /node_modules/socket.io-clinet/dist 内のファイルをインポートできる
+app.use("/socket.io-client", express.static(__dirname + "/node_modules/socket.io-client/dist/"));
+
 // socket.io接続時、及びその後の処理
 io.on("connection", (socket) => {
     console.log("socket.ioに接続しました");

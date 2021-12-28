@@ -1,3 +1,5 @@
+import { io } from "/socket.io-client/socket.io.esm.min.js";
+
 class DisplayProperty {
     // コメントを何行流すかの設定
     #commentLane;
@@ -20,6 +22,7 @@ class DisplayProperty {
             }));
         this.#commentDisplayTime = commentDisplayTime;
         this.#setWindowSize();
+        this.socket = io();
     }
 
     #setWindowSize() {
@@ -82,6 +85,20 @@ class DisplayProperty {
                 return { comment: null };
             }
         }
+    }
+
+    connectSocketIoServer() {
+        this.socket.on('connect', () => {
+            console.log("socket.ioに接続しました");
+        });
+
+        this.socket.on('spread message', (strMessage) => {
+            // OPENRECのコメントがスタンプの場合は処理しない
+            if (strMessage.length == 0) return;
+
+            // 流れるコメントの作成
+            this.createComment(strMessage);
+        });
     }
 }
 
