@@ -11,17 +11,13 @@
 
 <body>
     <canvas id="placeholder" width="1920" height="1080"></canvas>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        let instance;
-    </script>
     <script type="module">
         import { CanvasState } from "../js/class/canvas.js";
-        instance = new CanvasState(11, 5000);
-
+        const instance = new CanvasState(11, 5000);
+        
+        instance.connectSocketIoServer();
         setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
     </script>
-    <script type="module" src="../js/renderCommentToHtml.js"></script>
 </body>
 
 </html>
