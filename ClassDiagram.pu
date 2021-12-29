@@ -1,0 +1,50 @@
+@startuml
+
+class DisplayProperty {
+    -commentLane
+    -commentDisplayTime
+    -commentMoveWidth
+    -commentHeight
+    +rows
+    +socket
+
+    -setWindowSize()
+    +getWindowSize()
+    +getCommentDisplayTime()
+    +getCommentLane()
+    +calcCommentRow(commentMessage, width)
+    +connectSocketIoServer()
+}
+
+class CreateCommentLaneHtml {
+    +measureStringWidth(string)
+}
+
+class Css {
+    +createComment(strMessage)
+}
+
+class Gsap {
+    -gsapCount
+
+    -setGsapCount()
+    +createComment(strMessage)
+}
+
+class CanvasState {
+    +canvas
+    +context
+    +height
+    +fps
+    +commentList
+
+    -measureStringWidth(comment)
+    +createComment(commentMessage)
+    +drawNextFrame()
+}
+
+DisplayProperty <|-- CreateCommentLaneHtml
+DisplayProperty <|-- CanvasState
+CreateCommentLaneHtml <|-- Css
+CreateCommentLaneHtml <|-- Gsap
+@enduml
