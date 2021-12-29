@@ -66,7 +66,7 @@ https://github.com/shigaresso/send-comment-from-browser
 
 ## ブランチのバージョンについて
 - ver 5.5  
-canvas、GSAP でも npm パッケージからモジュールとしてインポートが可能になった。  
+canvas、GSAP の HTML ファイルでも npm パッケージからモジュールとしてインポートが可能になった。  
 - ver 5.4  
 socket.io のクライアント側を今までは スクリプトファイルから読み込んでいたが、npm パッケージから JavaScript にモジュールとしてインポート出来るようになった。  
 現在は、CSS バージョンのみで利用可能。  
