@@ -65,6 +65,8 @@ https://github.com/shigaresso/send-comment-from-browser
 配信のブラウザのタブをバックグラウンドにするとコメントの送信が中断される場合があるため、バックグラウンドにしないように注意して下さい。  
 
 ## ブランチのバージョンについて
+- ver 5.6  
+Pixi.js の HTML ファイルでも npm パッケージからモジュールとしてインポートが可能になった。  
 - ver 5.5  
 canvas、GSAP の HTML ファイルでも npm パッケージからモジュールとしてインポートが可能になった。  
 - ver 5.4  

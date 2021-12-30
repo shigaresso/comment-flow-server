@@ -43,8 +43,19 @@ class CanvasState {
     +getFps()
 }
 
+class Pixi_js {
+    +app
+    +style
+    +commentList
+    +fps
+
+    +createComment(commentMessage)
+    +drawNextFrame()
+}
+
 DisplayProperty <|-- CreateCommentLaneHtml
 DisplayProperty <|-- CanvasState
+DisplayProperty <|-- Pixi_js
 CreateCommentLaneHtml <|-- Css
 CreateCommentLaneHtml <|-- Gsap
 @enduml

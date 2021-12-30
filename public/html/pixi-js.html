@@ -20,18 +20,15 @@
 
 <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.1/pixi.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
     <div id="placeholder"></div>
-    <script>
-        let instance;
-    </script>
     <script type="module">
         import { Pixi_js } from "../js/class/pixi.js";
-        instance = new Pixi_js(11, 5000);
+        const instance = new Pixi_js(11, 5000);
+
+        instance.connectSocketIoServer();
         // requestAnimationFrame(instance.render);
         setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
     </script>
-    <script type="module" src="../js/renderCommentToHtml.js"></script>
 </body>
 
 </html>

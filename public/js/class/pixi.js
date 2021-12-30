@@ -1,7 +1,9 @@
 import { DisplayProperty } from "./displayProperty.js";
 
 class Comment {
+    // コメントの Pixi.js インスタンス
     #pixiInstance
+    // 1 回の更新で移動する量
     #move
 
     constructor(pixiInstance, move) {
