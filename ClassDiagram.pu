@@ -5,8 +5,8 @@ class DisplayProperty {
     -commentDisplayTime
     -commentMoveWidth
     -commentHeight
-    +rows
-    +socket
+    -rows
+    -socket
 
     -setWindowSize()
     +getWindowSize()
@@ -27,20 +27,20 @@ class Css {
 class Gsap {
     -gsapCount
 
-    -setGsapCount()
+    -getGsapCount()
     +createComment(strMessage)
 }
 
 class CanvasState {
-    +canvas
-    +context
-    +height
-    +fps
-    +commentList
+    -canvas
+    -context
+    -fps
+    -commentList
 
     -measureStringWidth(comment)
     +createComment(commentMessage)
     +drawNextFrame()
+    +getFps()
 }
 
 DisplayProperty <|-- CreateCommentLaneHtml

@@ -9,11 +9,13 @@ class DisplayProperty {
     #commentMoveWidth;
     // コメントテキストの高さ
     #commentHeight;
-
+    // コメント作成時に描画出来るか確認するための情報
+    #rows;
+    // socket.io を利用する為に必要
+    #socket;
     constructor(commentLane, commentDisplayTime) {
         this.#commentLane = commentLane;
-        // コメント作成時に描画出来るか確認するための情報
-        this.rows = Array(this.#commentLane)
+        this.#rows = Array(this.#commentLane)
             .fill()
             .map(_ => ({
                 bornTime: 0,
@@ -21,8 +23,8 @@ class DisplayProperty {
                 width: 0,
             }));
         this.#commentDisplayTime = commentDisplayTime;
+        this.#socket = io();
         this.#setWindowSize();
-        this.socket = io();
     }
 
     #setWindowSize() {
@@ -65,7 +67,7 @@ class DisplayProperty {
         };
         comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
 
-        for (const [index, row] of this.rows.entries()) {
+        for (const [index, row] of this.#rows.entries()) {
             const relativeSpeed = comment.speed - row.speed;
             const timeLag = comment.bornTime - row.bornTime;
             const rowCommentRightSide = row.speed * timeLag - row.width
@@ -73,14 +75,14 @@ class DisplayProperty {
             // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
             if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
                 // 次、この行にコメントが流れる為の条件についての情報
-                this.rows[index] = comment;
+                this.#rows[index] = comment;
                 return {
                     commentMessage,
                     comment,
                     index,
                 };
             }
-            if (index == this.rows.length - 1) {
+            if (index == this.#rows.length - 1) {
                 console.log("コメントを流せませんでした");
                 return { comment: null };
             }
@@ -88,11 +90,11 @@ class DisplayProperty {
     }
 
     connectSocketIoServer() {
-        this.socket.on('connect', () => {
+        this.#socket.on('connect', () => {
             console.log("socket.ioに接続しました");
         });
 
-        this.socket.on('spread message', (strMessage) => {
+        this.#socket.on('spread message', (strMessage) => {
             // OPENRECのコメントがスタンプの場合は処理しない
             if (strMessage.length == 0) return;
 

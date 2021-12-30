@@ -16,7 +16,7 @@
         const instance = new CanvasState(11, 5000);
         
         instance.connectSocketIoServer();
-        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
+        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.getFps()));
     </script>
 </body>
 

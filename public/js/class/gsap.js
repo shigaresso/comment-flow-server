@@ -9,7 +9,7 @@ class Gsap extends CreateCommentLaneHtml {
         this.#gsapCount = 0;
     }
 
-    #setGsapCount() {
+    #getGsapCount() {
         this.#gsapCount %= 100000;
         this.#gsapCount++;
         return this.#gsapCount;
@@ -22,7 +22,7 @@ class Gsap extends CreateCommentLaneHtml {
         const div_text = document.createElement("div");
         div_text.innerText = strMessage;
 
-        div_text.id = "text" + this.#setGsapCount();
+        div_text.id = "text" + this.#getGsapCount();
         div_text.style.position = 'absolute';
         div_text.style.paddingLeft = "100%";
         div_text.style.lineHeight = "1em";
