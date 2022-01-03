@@ -16,8 +16,8 @@ class Gsap extends CreateCommentLaneHtml {
     }
 
     async createComment(strMessage) {
-        const commentProperty = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
-        if (!commentProperty.comment) return;
+        const { comment, index } = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
+        if (!comment) return;
 
         const div_text = document.createElement("div");
         div_text.innerText = strMessage;
@@ -26,13 +26,13 @@ class Gsap extends CreateCommentLaneHtml {
         div_text.style.position = 'absolute';
         div_text.style.paddingLeft = "100%";
         div_text.style.lineHeight = "1em";
-        const placeholder = document.getElementById(`row${commentProperty.index}`);
+        const placeholder = document.getElementById(`row${index}`);
         placeholder.appendChild(div_text);
-        console.log(commentProperty.comment.width)
+        console.log(comment.width)
         // GSAP によるアニメーション
         await gsap.to("#" + div_text.id, {
             duration: 5,
-            x: -1 * (document.documentElement.clientWidth + commentProperty.comment.width + 10),
+            x: -1 * (document.documentElement.clientWidth + comment.width + 10),
             ease: "linear",
             force3D: true,
         });

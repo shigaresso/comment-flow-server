@@ -46,13 +46,13 @@ class Pixi_js extends DisplayProperty {
 
     createComment(commentMessage) {
         const text = new PIXI.Text(commentMessage, this.style)
-        const commentProperty = this.calcCommentRow(commentMessage, text.width);
-        if (!commentProperty.comment) return;
+        const { comment, index } = this.calcCommentRow(commentMessage, text.width);
+        if (!comment) return;
         const [commentMoveWidth, commentHeight] = this.getWindowSize();
         text.position.x = commentMoveWidth // scoreText の x 座標
-        text.position.y = commentHeight * commentProperty.index // scoreText の y 座標
+        text.position.y = commentHeight * index // scoreText の y 座標
         this.app.stage.addChild(text)
-        const speed = Math.floor(commentProperty.comment.speed * 1000 / 60)
+        const speed = Math.floor(comment.speed * 1000 / 60)
         console.log(speed)
         this.commentList.push(new Comment(text, speed))
     }

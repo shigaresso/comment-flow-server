@@ -9,11 +9,11 @@ class Css extends CreateCommentLaneHtml {
     }
 
     createComment(strMessage) {
-        const commentProperty = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
-        if (!commentProperty.comment) return;
+        const { comment, index } = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
+        if (!comment) return;
         const div_text = document.createElement("div");
         div_text.className = "comment";
-        const placeholder = document.getElementById(`row${commentProperty.index}`);
+        const placeholder = document.getElementById(`row${index}`);
         div_text.innerText = strMessage;
         placeholder.appendChild(div_text);
 

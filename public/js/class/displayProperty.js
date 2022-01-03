@@ -77,7 +77,6 @@ class DisplayProperty {
                 // 次、この行にコメントが流れる為の条件についての情報
                 this.#rows[index] = comment;
                 return {
-                    commentMessage,
                     comment,
                     index,
                 };
