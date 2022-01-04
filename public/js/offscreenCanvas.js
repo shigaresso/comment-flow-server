@@ -73,7 +73,7 @@ class Comment {
 
 function drawNextFrame() {
     // Canvas 画面のクリア
-    if (commentList) {
+    if (context) {
         context.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
         // コメントを１フレーム進める処理
         commentList.forEach(comment => {
@@ -86,7 +86,3 @@ function drawNextFrame() {
 }
 
 requestAnimationFrame(drawNextFrame);
-
-// setInterval(() => {
-//     drawNextFrame()
-// }, 1000/60);

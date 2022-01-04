@@ -1,8 +1,8 @@
-const createCanvas = (domId, rowHeight) => {
+const createCanvas = (domId, commentMoveWidth, rowHeight) => {
     const element = document.createElement("canvas");
     element.id = domId;
     element.className = "canvas";
-    element.width = 1920;
+    element.width = commentMoveWidth;
     element.height = rowHeight;
     document.body.appendChild(element);
 }
