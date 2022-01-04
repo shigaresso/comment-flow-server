@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/canvas.css">
+    <style type="text/css">
+        #ruler {
+            /* これによって offscreenCanvas の上に被せることが出来る */
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <script type="text/javascript">
+        // コメント行はいくつあるか？
+        const row = 11;
+        // 1 行の高さ
+        const rowHeight = Math.floor(document.documentElement.clientHeight / row);
+    </script>
+    <script type="module">
+        import { createCanvas } from "../js/canvasMulti.js"
+        
+
+        createCanvas("ruler", rowHeight);
+        // canvas 用の HTML を作成
+        for (let i = 0; i < row; i++) {
+            createCanvas(`myCanvas${i}`, rowHeight);
+        }
+
+
+    </script>
+    <script type="module">
+        import { io } from "/socket.io-client/socket.io.esm.min.js";
+        import { calcCommentRow } from "../js/canvasMulti.js"
+
+        // Worker インスタンスを保持する配列
+        const workers = [];
+        for (let i = 0; i < row; i++) {
+            // canvas 要素の取得
+            const canvas = document.getElementById(`myCanvas${i}`);
+
+            // canvas 要素の描画コントロールを OffscreenCanvas に委譲する
+            const offscreenCanvas = canvas.transferControlToOffscreen();
+
+            // worker を作成し、OffscreenCanvas を渡す
+            workers.push(new Worker("../js/offscreenCanvas.js"))
+            workers[i].postMessage({ case: "constructor", rowHeight: rowHeight, canvas: offscreenCanvas }, [offscreenCanvas]);
+        }
+
+        const canvas = document.getElementById('ruler');
+        const context = canvas.getContext('2d');
+        context.textBaseline = "top";
+        context.textAlign = "end"
+        context.font = `900 ${rowHeight}px Segoe UI Emoji`;
+        context.fillStyle = "white";
+        // 縁取り部分のテキストを尖らないようにする
+        context.lineJoin = "round";
+        context.lineWidth = 13;
+
+        const rows = Array(row)
+            .fill()
+            .map(_ => ({
+                bornTime: 0,
+                speed: 0,
+                width: 0,
+            }));
+
+        const socket = io();
+        socket.on('connect', () => {
+            console.log("socket.ioに接続しました");
+        });
+        socket.on('spread message', (strMessage) => {
+            // OPENRECのコメントがスタンプの場合は処理しない
+            if (strMessage.length == 0) return;
+
+
+            const { index, comment } = calcCommentRow(rows, Math.round(context.measureText(strMessage).width));
+            if (!comment) return;
+            console.log(index);
+            workers[index].postMessage({ case: "receiveComment", comment: strMessage });
+        });
+
+    </script>
+</body>
+
+</html>
