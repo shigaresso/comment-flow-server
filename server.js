@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
 
 // GETメソッドされた時のルーティングの設定
 app.get("/gsap", (req, res) => {
-    console.log("/ へのアクセスがありました")
+    console.log("gsap へのアクセスがありました")
     /*
         "/" にアクセスがあった時、res.sendFile()によって、
         __dirname(このプログラムのディレクトリのパス)/comment-flow-gsap.htmlを渡す
@@ -74,6 +74,12 @@ app.get("/canvas", (req, res) => {
     res.sendFile(`${__dirname}/public/html/canvas.html`);
 });
 
+app.get("/canvas-multi", (req, res) => {
+    console.log("canvas-multi へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/canvas-multi.html`);
+});
+
+
 app.get("/css", (req, res) => {
     console.log("CSS へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/css.html`);
@@ -84,18 +90,28 @@ app.get("/pixi-js", (req, res) => {
     res.sendFile(`${__dirname}/public/html/pixi-js.html`);
 });
 
+app.get("/test", (req, res) => {
+    console.log("test へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/test.html`);
+});
+
+app.get("/three-js", (req, res) => {
+    console.log("three.js へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/three-js.html`);
+});
+
 app.get("/web-worker", (req, res) => {
     console.log("webworker へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/web-worker.html`);
-    // res.sendFile(`${__dirname}/public/html/comment-flow-css.html`);
-
 });
 
 // サーバーの起動
 server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/canvas/`);
+    console.log(`listening on http://localhost:${port}/canvas-multi/`);
     console.log(`listening on http://localhost:${port}/css/`);
     console.log(`listening on http://localhost:${port}/gsap/`);
     console.log(`listening on http://localhost:${port}/pixi-js/`);
+    console.log(`listening on http://localhost:${port}/test/`);
     console.log(`listening on http://localhost:${port}/web-worker/`);
 });

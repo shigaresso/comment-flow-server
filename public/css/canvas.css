@@ -4,3 +4,8 @@ body {
     background-color: green;
     overflow: hidden;
 }
+
+.canvas {
+    /* canvas 要素同士の隙間を埋める為に使う */
+    vertical-align: bottom;
+}

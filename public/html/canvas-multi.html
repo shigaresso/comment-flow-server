@@ -21,6 +21,7 @@
         const row = 11;
         // 1 行の高さ
         const rowHeight = Math.floor(document.documentElement.clientHeight / row);
+        const commentMoveWidth = document.documentElement.clientWidth;
     </script>
     <script type="module">
         import { createCanvas } from "../js/canvasMulti.js"
@@ -49,7 +50,7 @@
 
             // worker を作成し、OffscreenCanvas を渡す
             workers.push(new Worker("../js/offscreenCanvas.js"))
-            workers[i].postMessage({ case: "constructor", rowHeight: rowHeight, canvas: offscreenCanvas }, [offscreenCanvas]);
+            workers[i].postMessage({ case: "constructor", canvas: offscreenCanvas }, [offscreenCanvas]);
         }
 
         const canvas = document.getElementById('ruler');
@@ -78,11 +79,11 @@
             // OPENRECのコメントがスタンプの場合は処理しない
             if (strMessage.length == 0) return;
 
-
-            const { index, comment } = calcCommentRow(rows, Math.round(context.measureText(strMessage).width));
+            const commentWidth = Math.round(context.measureText(strMessage).width);
+            const { index, comment } = calcCommentRow(rows, commentWidth);
             if (!comment) return;
             console.log(index);
-            workers[index].postMessage({ case: "receiveComment", comment: strMessage });
+            workers[index].postMessage({ case: "receiveComment", comment, strMessage, commentWidth });
         });
 
     </script>

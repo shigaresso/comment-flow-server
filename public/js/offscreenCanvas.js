@@ -1,6 +1,10 @@
 // offscreenCanvas と context は初めて worker に送った時にだけ定義したいので、宣言と初期化を分けている。
 let offscreenCanvas;
 let context;
+
+const commentList = [];
+const fps = 60;
+
 onmessage = event => {
     /*
      * メインスレッドから、OffscreenCanvas を受け取る
@@ -10,26 +14,79 @@ onmessage = event => {
     switch (event.data.case) {
         case "constructor":
             offscreenCanvas = event.data.canvas;
-            console.log(offscreenCanvas)
             // CanvasRenderingContext2D を取得する(引数を webgl にすれば webgl を利用出来る)
             context = offscreenCanvas.getContext("2d");
 
             context.textBaseline = "top";
             context.textAlign = "end"
-            context.font = `900 ${event.data.rowHeight}px Segoe UI Emoji`;
+            context.font = `900 ${offscreenCanvas.height}px Segoe UI Emoji`;
             context.fillStyle = "white";
             // 縁取り部分のテキストを尖らないようにする
             context.lineJoin = "round";
             context.lineWidth = 13;
             break;
         case "receiveComment":
-            console.log(event.data.comment);
+            createComment(event.data.strMessage, event.data.commentWidth, event.data.comment.speed);
             break;
         default:
             console.log("worker default");
     }
 }
 
+function createComment(commentMessage, commentWidth, speed) {
+    const moveWidth = offscreenCanvas.width + commentWidth;
+    const move = speed * 1000 / fps;
+    commentList.push(new Comment(commentMessage, moveWidth, move));
+}
+
+// ここから下を作成
+
+class Comment {
+    // コメントの文字列
+    #text;
+    // コメントの x 座標
+    #x;
+    // コメントの y 座標
+    #y;
+    // コメントが 1 回の更新でどれだけ進むか
+    #move;
+    constructor(text, x, move) {
+        this.#text = text;
+        this.#x = x;
+        this.#y = 0;
+        this.#move = move;
+    }
+
+    update() {
+        this.#x -= this.#move;
+    }
+
+    render(context) {
+        context.strokeText(this.#text, this.#x, this.#y);
+        context.fillText(this.#text, this.#x, this.#y);
+    }
+
+    getCommentX() {
+        return this.#x;
+    }
+}
+
+function drawNextFrame() {
+    // Canvas 画面のクリア
+    if (commentList) {
+        context.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+        // コメントを１フレーム進める処理
+        commentList.forEach(comment => {
+            comment.update();
+            if (comment.getCommentX() <= 0) commentList.shift();
+            comment.render(context);
+        });
+    }
+    requestAnimationFrame(drawNextFrame);
+}
+
+requestAnimationFrame(drawNextFrame);
+
 // setInterval(() => {
-//     console.log("interval")
-// }, 2000);
+//     drawNextFrame()
+// }, 1000/60);
