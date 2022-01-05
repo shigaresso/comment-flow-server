@@ -30,9 +30,5 @@ onmessage = e => {
             });
             return;
         }
-        // if (index == rows.length - 1) {
-        //     console.log("コメントを流せませんでした");
-        //     return { comment: null };
-        // }
     }
 }

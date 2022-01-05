@@ -60,7 +60,7 @@ class CanvasState extends DisplayProperty {
     }
 
     createComment(commentMessage) {
-        const { comment, index } = this.calcCommentRow(commentMessage, this.#measureStringWidth(commentMessage));
+        const { comment, index } = this.calcCommentRow(this.#measureStringWidth(commentMessage));
         if (!comment) return;
         const [commentMoveWidth, commentHeight] = this.getWindowSize();
         const moveWidth = commentMoveWidth + comment.width;

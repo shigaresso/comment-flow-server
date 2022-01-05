@@ -13,6 +13,7 @@ class DisplayProperty {
     #rows;
     // socket.io を利用する為に必要
     #socket;
+    
     constructor(commentLane, commentDisplayTime) {
         this.#commentLane = commentLane;
         this.#rows = Array(this.#commentLane)
@@ -38,7 +39,7 @@ class DisplayProperty {
      */
     getWindowSize() {
         this.#setWindowSize();
-        return [this.#commentMoveWidth, this.#commentHeight];
+        return { commentMoveWidth: this.#commentMoveWidth, commentHeight: this.#commentHeight };
     }
 
     /**
@@ -57,9 +58,9 @@ class DisplayProperty {
         return this.#commentLane;
     }
 
-    calcCommentRow(commentMessage, width) {
+    calcCommentRow(width) {
         const commentDisplayTime = this.getCommentDisplayTime();
-        const [commentMoveWidth, commentHeight] = this.getWindowSize();
+        const { commentMoveWidth } = this.getWindowSize();
 
         const comment = {
             bornTime: Date.now(),

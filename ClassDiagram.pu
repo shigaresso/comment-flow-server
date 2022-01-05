@@ -44,13 +44,19 @@ class CanvasState {
 }
 
 class Pixi_js {
-    +app
-    +style
-    +commentList
-    +fps
+    -app
+    -style
+    -commentList
+    -fps
 
     +createComment(commentMessage)
     +drawNextFrame()
+    +getCommentList()
+    +getFps()
+}
+
+class WebWorker {
+    +createComment(strMessage)
 }
 
 DisplayProperty <|-- CreateCommentLaneHtml
@@ -58,4 +64,5 @@ DisplayProperty <|-- CanvasState
 DisplayProperty <|-- Pixi_js
 CreateCommentLaneHtml <|-- Css
 CreateCommentLaneHtml <|-- Gsap
+Css <|-- WebWorker
 @enduml

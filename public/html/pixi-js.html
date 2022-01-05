@@ -10,8 +10,9 @@
         * {
             margin: 0px;
             padding: 0px;
+            overflow: hidden;
         }
-        
+
         body {
             background-color: green;
         }
@@ -23,11 +24,13 @@
     <div id="placeholder"></div>
     <script type="module">
         import { Pixi_js } from "../js/class/pixi.js";
-        const instance = new Pixi_js(11, 5000);
+        const rowCount = 11;
+        const rowHeight = Math.round(document.documentElement.clientHeight / rowCount);
+        const commentDisplayTime_ms = 5000;
+        const instance = new Pixi_js(rowCount, commentDisplayTime_ms, rowHeight);
 
         instance.connectSocketIoServer();
-        // requestAnimationFrame(instance.render);
-        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.fps));
+        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.getFps()));
     </script>
 </body>
 

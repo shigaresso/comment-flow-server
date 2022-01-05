@@ -15,6 +15,7 @@
 
 body {
     background-color: rgb(0, 255, 0);
+    /* スクロールバーの消去 */
     overflow: hidden;
     position: relative;
     /* これによってコメントが長くても折り返さないようになる */

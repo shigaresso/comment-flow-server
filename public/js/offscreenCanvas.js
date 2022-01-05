@@ -6,14 +6,16 @@ const commentList = [];
 const fps = 60;
 
 onmessage = event => {
+    const { pattern, canvas, comment, strMessage, commentWidth } = event.data;
+    const { speed } = comment;
     /*
      * メインスレッドから、OffscreenCanvas を受け取る
      * この行以降 offscreenCanvas 変数は通常の canvas と同様の処理が出来る
      */
 
-    switch (event.data.case) {
+    switch (pattern) {
         case "constructor":
-            offscreenCanvas = event.data.canvas;
+            offscreenCanvas = canvas;
             // CanvasRenderingContext2D を取得する(引数を webgl にすれば webgl を利用出来る)
             context = offscreenCanvas.getContext("2d");
 
@@ -26,7 +28,7 @@ onmessage = event => {
             context.lineWidth = 13;
             break;
         case "receiveComment":
-            createComment(event.data.strMessage, event.data.commentWidth, event.data.comment.speed);
+            createComment(strMessage, commentWidth, speed);
             break;
         default:
             console.log("worker default");
@@ -38,8 +40,6 @@ function createComment(commentMessage, commentWidth, speed) {
     const move = speed * 1000 / fps;
     commentList.push(new Comment(commentMessage, moveWidth, move));
 }
-
-// ここから下を作成
 
 class Comment {
     // コメントの文字列
@@ -78,8 +78,8 @@ function drawNextFrame() {
         // コメントを１フレーム進める処理
         commentList.forEach(comment => {
             comment.update();
-            if (comment.getCommentX() <= 0) commentList.shift();
             comment.render(context);
+            if (comment.getCommentX() <= 0) commentList.shift();
         });
     }
     requestAnimationFrame(drawNextFrame);

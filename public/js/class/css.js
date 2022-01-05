@@ -9,7 +9,7 @@ class Css extends CreateCommentLaneHtml {
     }
 
     createComment(strMessage) {
-        const { comment, index } = this.calcCommentRow(strMessage, this.measureStringWidth(strMessage));
+        const { comment, index } = this.calcCommentRow(this.measureStringWidth(strMessage));
         if (!comment) return;
         const div_text = document.createElement("div");
         div_text.className = "comment";
