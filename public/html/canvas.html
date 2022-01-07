@@ -14,9 +14,10 @@
     <script type="module">
         import { CanvasState } from "../js/class/canvas.js";
         const instance = new CanvasState(11, 5000);
-        
+
         instance.connectSocketIoServer();
-        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.getFps()));
+        
+        requestAnimationFrame(() => instance.drawNextFrame());
     </script>
 </body>
 

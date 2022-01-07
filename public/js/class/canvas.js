@@ -62,7 +62,7 @@ class CanvasState extends DisplayProperty {
     createComment(commentMessage) {
         const { comment, index } = this.calcCommentRow(this.#measureStringWidth(commentMessage));
         if (!comment) return;
-        const [commentMoveWidth, commentHeight] = this.getWindowSize();
+        const { commentMoveWidth, commentHeight } = this.getWindowSize();
         const moveWidth = commentMoveWidth + comment.width;
         const move = comment.speed * 1000 / this.#fps;
         this.#commentList.push(new Comment(commentMessage, moveWidth, commentHeight * index, move));
@@ -78,6 +78,7 @@ class CanvasState extends DisplayProperty {
             if (comment.x <= 0) this.#commentList.shift();
             comment.render(this.#context);
         });
+        requestAnimationFrame(() => this.drawNextFrame());
     }
 
     getFps() {
