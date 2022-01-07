@@ -7,7 +7,6 @@ const fps = 60;
 
 onmessage = event => {
     const { pattern, canvas, comment, strMessage, commentWidth } = event.data;
-    const { speed } = comment;
     /*
      * メインスレッドから、OffscreenCanvas を受け取る
      * この行以降 offscreenCanvas 変数は通常の canvas と同様の処理が出来る
@@ -28,6 +27,7 @@ onmessage = event => {
             context.lineWidth = 13;
             break;
         case "receiveComment":
+            const { speed } = comment;
             createComment(strMessage, commentWidth, speed);
             break;
         default:
