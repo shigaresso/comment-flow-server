@@ -68,6 +68,9 @@ class Pixi_js extends DisplayProperty {
         this.#commentList.forEach(instance => {
             instance.render(this);
         });
+
+        // 関数内は bind させるか無名関数で書かないとエラーになる
+        requestAnimationFrame(() => this.drawNextFrame());
     }
 
     getCommentList() {

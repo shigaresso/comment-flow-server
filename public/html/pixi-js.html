@@ -30,7 +30,9 @@
         const instance = new Pixi_js(rowCount, commentDisplayTime_ms, rowHeight);
 
         instance.connectSocketIoServer();
-        setInterval(() => instance.drawNextFrame(), Math.floor(1000 / instance.getFps()));
+
+        // 関数内は bind させるか無名関数で書かないとエラーになる
+        requestAnimationFrame(() => instance.drawNextFrame());
     </script>
 </body>
 
