@@ -19,13 +19,14 @@ class CanvasState extends DisplayProperty {
         this.#context = this.#canvas.getContext('2d')
 
         const height = Math.floor(this.#canvas.height / this.getCommentLane());
+        this.#context.lineWidth = 13;
+
         this.#context.textBaseline = "top";
         this.#context.textAlign = "start"
-        this.#context.font = `900 ${height - Math.round(height / 4)}px Segoe UI Emoji`;
+        this.#context.font = `900 ${height - this.#context.lineWidth - Math.round(height / 4)}px Segoe UI Emoji`;
         this.#context.fillStyle = "white";
         // 縁取り部分のテキストを尖らないようにする
         this.#context.lineJoin = "round";
-        this.#context.lineWidth = 13;
         this.#fps = 60;
         this.#commentList = [];
     }
@@ -39,7 +40,7 @@ class CanvasState extends DisplayProperty {
         const { comment, index } = this.calcCommentRow(this.#measureStringWidth(commentMessage));
         if (!comment) return;
         const { commentMoveWidth, commentHeight } = this.getWindowSize();
-        const moveWidth = commentMoveWidth// + comment.width;
+        const moveWidth = commentMoveWidth;
         const move = comment.speed * 1000 / this.getFps();
         // if (index < this.getCommentLane() / 2) {
         this.#commentList.push(new CanvasComment(commentMessage, comment.width, moveWidth, commentHeight, index, move, this.#context.lineWidth));
@@ -53,7 +54,7 @@ class CanvasState extends DisplayProperty {
         this.#commentList.forEach(comment => {
             // コメントのあった幅だけを削除
             const { x, move } = comment.property();
-            if (x < -2 * move) this.#commentList.shift();
+            if (x < 0) this.#commentList.shift();
             comment.render(this.#context);
         });
         requestAnimationFrame(() => this.drawNextFrame());
