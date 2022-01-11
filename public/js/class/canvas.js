@@ -19,11 +19,11 @@ class CanvasState extends DisplayProperty {
         this.#context = this.#canvas.getContext('2d')
 
         const height = Math.floor(this.#canvas.height / this.getCommentLane());
-        this.#context.lineWidth = 13;
+        this.#context.lineWidth = 10;
 
         this.#context.textBaseline = "top";
         this.#context.textAlign = "start"
-        this.#context.font = `900 ${height - this.#context.lineWidth - Math.round(height / 4)}px Segoe UI Emoji`;
+        this.#context.font = `900 ${height - 4*this.#context.lineWidth}px Segoe UI Emoji`;
         this.#context.fillStyle = "white";
         // 縁取り部分のテキストを尖らないようにする
         this.#context.lineJoin = "round";

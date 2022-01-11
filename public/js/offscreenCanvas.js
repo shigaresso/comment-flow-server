@@ -19,7 +19,7 @@ onmessage = event => {
             context = offscreenCanvas.getContext("2d");
 
             context.textBaseline = "top";
-            context.textAlign = "end"
+            context.textAlign = "start"
             context.font = `900 ${offscreenCanvas.height}px Segoe UI Emoji`;
             context.fillStyle = "white";
             // 縁取り部分のテキストを尖らないようにする
@@ -38,7 +38,7 @@ onmessage = event => {
 function createComment(commentMessage, commentWidth, speed) {
     const moveWidth = offscreenCanvas.width + commentWidth;
     const move = speed * 1000 / fps;
-    commentList.push(new Comment(commentMessage, moveWidth, move));
+    commentList.push(new Comment(commentMessage, moveWidth, move, commentWidth, offscreenCanvas.height, context.lineWidth));
 }
 
 class Comment {
@@ -46,40 +46,54 @@ class Comment {
     #text;
     // コメントの x 座標
     #x;
+    #x1;
     // コメントの y 座標
     #y;
     // コメントが 1 回の更新でどれだけ進むか
     #move;
-    constructor(text, x, move) {
+    #width;
+    #height;
+    #lineWidth;
+    constructor(text, x, move, width, height, lineWidth) {
         this.#text = text;
         this.#x = x;
+        this.#x1 = x;
         this.#y = 0;
         this.#move = move;
+        this.#width = width;
+        this.#height = height;
+        this.#lineWidth = lineWidth;
     }
 
-    update() {
-        this.#x -= this.#move;
-    }
 
     render(context) {
+        if (this.#x >= context.width) {
+            this.#x1 = context.width;
+            this.#x2 = context.width+this.#lineWidth;
+        }
+        context.clearRect(this.#x1, this.#y, this.#width+this.#lineWidth, this.#height);
         context.strokeText(this.#text, this.#x, this.#y);
         context.fillText(this.#text, this.#x, this.#y);
+        this.#x -= this.#move;
+        this.#x1 -= this.#move;
+        if (this.#x < this.#move) {
+            this.#x1 = 0;
+        }
+
     }
 
-    getCommentX() {
-        return this.#x;
+    getCommentEnd() {
+        return this.#x+this.#width+this.#lineWidth;
     }
 }
 
 function drawNextFrame() {
     // Canvas 画面のクリア
     if (context) {
-        context.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
         // コメントを１フレーム進める処理
         commentList.forEach(comment => {
-            comment.update();
             comment.render(context);
-            if (comment.getCommentX() <= 0) commentList.shift();
+            if (comment.getCommentEnd() <= 0) commentList.shift();
         });
     }
     requestAnimationFrame(drawNextFrame);
