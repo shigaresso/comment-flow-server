@@ -10,9 +10,10 @@
     <div id="placeholder"></div>
     <!-- 要素の幅を取得するために利用するDOM -->
     <span id="ruler"></span>
+    <script src="../js/setting.js"></script>
     <script type="module">
         import { Css } from "../js/class/css.js";
-        const instance = new Css(11, 5000);
+        const instance = new Css(row, commentDisplayTime);
 
         instance.connectSocketIoServer();
     </script>
