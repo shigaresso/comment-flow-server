@@ -20,8 +20,8 @@
         import { createCanvas } from "../js/canvasMulti.js"
         import { io } from "/socket.io-client/socket.io.esm.min.js";
         import { calcCommentRow } from "../js/canvasMulti.js";
-        import {rowCount, rowHeight, commentMoveWidth, commentDisplayTime, canvasSetting} from "../js/setting.js";
-
+        import {rowCount, commentDisplayTime} from "../js/setting/setting.js";
+        import {rowHeight, commentMoveWidth, canvasSetting} from "../js/setting/notWorkerSetting.js";
         // コメント幅を調べるための canvas を作成
         createCanvas("ruler", commentMoveWidth, rowHeight);
         // コメントを流すための canvas 用の HTML を作成

@@ -10,10 +10,11 @@
     <div id="placeholder"></div>
     <!-- 要素の幅を取得するために利用するDOM -->
     <span id="ruler"></span>
-    <script src="../js/setting.js"></script>
     <script type="module">
         import { WebWorker } from "../js/class/webWorker.js";
-        const instance = new WebWorker(row, commentDisplayTime);
+        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+
+        const instance = new WebWorker(rowCount, commentDisplayTime);
         instance.connectSocketIoServer();
 
         instance.myWorker.onmessage = e => {

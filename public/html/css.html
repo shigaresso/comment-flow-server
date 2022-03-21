@@ -12,7 +12,7 @@
     <span id="ruler"></span>
     <script type="module">
         import { Css } from "../js/class/css.js";
-        import { rowCount, commentDisplayTime } from "../js/setting.js";
+        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
         const instance = new Css(rowCount, commentDisplayTime);
 
         instance.connectSocketIoServer();
