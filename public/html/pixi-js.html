@@ -22,11 +22,11 @@
 <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.1/pixi.min.js"></script>
     <div id="placeholder"></div>
-    <script src="../js/setting.js"></script>
     <script type="module">
         import { Pixi_js } from "../js/class/pixi.js";
-        const rowHeight = Math.round(document.documentElement.clientHeight / row);
-        const instance = new Pixi_js(row, commentDisplayTime, rowHeight);
+        import { rowCount, rowHeight, commentDisplayTime } from "../js/setting.js";
+
+        const instance = new Pixi_js(rowCount, commentDisplayTime, rowHeight);
 
         instance.connectSocketIoServer();
 

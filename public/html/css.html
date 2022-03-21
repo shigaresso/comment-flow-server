@@ -12,8 +12,8 @@
     <span id="ruler"></span>
     <script type="module">
         import { Css } from "../js/class/css.js";
-        import { row, commentDisplayTime } from "../js/setting.js";
-        const instance = new Css(row, commentDisplayTime);
+        import { rowCount, commentDisplayTime } from "../js/setting.js";
+        const instance = new Css(rowCount, commentDisplayTime);
 
         instance.connectSocketIoServer();
     </script>
