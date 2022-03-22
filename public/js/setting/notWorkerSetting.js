@@ -1,3 +1,8 @@
+/**
+ * わざわざ設定ファイルを分ける理由は、worker thread で
+ * 利用していない rowHeight も読み込まれ、worker 側では
+ * document.documentElement.clientHeight が利用出来ずにエラーになるから
+ *  */ 
 import { rowCount } from "./setting.js";
 
 export const rowHeight = Math.round(document.documentElement.clientHeight / rowCount);
