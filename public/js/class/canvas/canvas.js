@@ -1,6 +1,15 @@
 import { DisplayProperty } from "../displayProperty.js";
 import { CanvasComment } from "./canvasComment.js";
 
+export const createCanvas = (domId, commentMoveWidth, rowHeight) => {
+    const element = document.createElement("canvas");
+    element.id = domId;
+    element.className = "canvas";
+    element.width = commentMoveWidth;
+    element.height = rowHeight;
+    document.body.appendChild(element);
+}
+
 class CanvasState extends DisplayProperty {
     // フレームレート
     #fps;
@@ -19,10 +28,10 @@ class CanvasState extends DisplayProperty {
         this.#context = this.#canvas.getContext('2d')
 
         const height = Math.floor(this.#canvas.height / this.getCommentLane());
-        this.#context.lineWidth = 10;
+        this.#context.lineWidth = 0;
 
         this.#context.textBaseline = "top";
-        this.#context.textAlign = "start"
+        this.#context.textAlign = "start";
         this.#context.font = `900 ${height - 4*this.#context.lineWidth}px Segoe UI Emoji`;
         this.#context.fillStyle = "white";
         // 縁取り部分のテキストを尖らないようにする

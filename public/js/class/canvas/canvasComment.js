@@ -33,7 +33,7 @@ class CanvasComment {
     // コメントの縁取りの幅
     #commentLineWidth;
     // テキストの端が削除する矩形からはみ出ないようにするため
-    #padding;
+    #padding = 15;
     constructor(commentString, commentWidth, commentMoveWidth, commentHeight, index, moveSpeed, commentLineWidth) {
         this.#commentString = commentString;
         this.#commentWidth = commentWidth;
@@ -45,7 +45,6 @@ class CanvasComment {
         this.#yStartPoint = commentHeight * index;
         this.#moveSpeed = moveSpeed;
         this.#commentLineWidth = commentLineWidth;
-        this.#padding = 5;
     }
 
     render(context) {
@@ -61,7 +60,7 @@ class CanvasComment {
     #deletePreComment(context) {
         this.#xDeleteStartPoint = this.#xStartPoint
         if (this.#xStartPoint <= this.#moveSpeed) this.#xDeleteStartPoint = 0;
-        context.clearRect(this.#xDeleteStartPoint, this.#yStartPoint, this.#commentWidth + this.#padding+10, this.#commentHeight);
+        context.clearRect(this.#xDeleteStartPoint, this.#yStartPoint, this.#commentWidth + this.#padding, this.#commentHeight);
     }
 
     #moveX() {

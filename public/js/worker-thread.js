@@ -1,4 +1,6 @@
-const rows = Array(11)
+import { rowCount } from "./setting/setting.js";
+
+const rows = Array(rowCount)
     .fill()
     .map(_ => ({
         bornTime: 0,
