@@ -17,11 +17,12 @@
 
 <body>
     <script type="module">
-        import { createCanvas } from "../js/canvasMulti.js"
         import { io } from "/socket.io-client/socket.io.esm.min.js";
-        import { calcCommentRow } from "../js/canvasMulti.js";
+        import { createCanvas } from "../js/class/canvas/canvas.js";
+        import { calcCommentRow } from "../js/class/canvas/canvas-multi/canvasMulti.js";
         import {rowCount, commentDisplayTime} from "../js/setting/setting.js";
         import {rowHeight, commentMoveWidth, canvasSetting} from "../js/setting/notWorkerSetting.js";
+        
         // コメント幅を調べるための canvas を作成
         createCanvas("ruler", commentMoveWidth, rowHeight);
         // コメントを流すための canvas 用の HTML を作成
@@ -49,8 +50,8 @@
             // canvas 要素の描画コントロールを OffscreenCanvas に委譲する
             const offscreenCanvas = canvas.transferControlToOffscreen();
 
-            // worker を作成し、OffscreenCanvas を渡す
-            workers.push(new Worker("../js/offscreenCanvas.js"))
+            // worker を作成し、そこに OffscreenCanvas を渡す (第二引数をこのように渡すことで、Web Worker 用のファイルでモジュールをインポート出来る)
+            workers.push(new Worker("../js/class/canvas/canvas-multi/offscreenCanvas.js", {type: "module"}))
             workers[i].postMessage({ pattern: "constructor", canvas: offscreenCanvas, canvasSetting: canvasSetting }, [offscreenCanvas]);
         }
 

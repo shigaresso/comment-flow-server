@@ -10,11 +10,12 @@
 </head>
 
 <body>
-    <canvas id="placeholder" width="1920" height="1080"></canvas>
-    <script src="../js/setting.js"></script>
     <script type="module">
-        import { CanvasState } from "../js/class/canvas.js";
-        const instance = new CanvasState(row, commentDisplayTime);
+        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+        import { createCanvas, CanvasState } from "../js/class/canvas/canvas.js";
+
+        createCanvas("placeholder", document.documentElement.clientWidth, document.documentElement.clientHeight);
+        const instance = new CanvasState(rowCount, commentDisplayTime);
 
         instance.connectSocketIoServer();
         
