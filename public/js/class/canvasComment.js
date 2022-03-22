@@ -13,61 +13,64 @@
  */
 class CanvasComment {
     // コメントの文字列
-    #text;
+    #commentString;
     // コメントの幅
     #commentWidth;
     // 1 行の幅
     #commentHeight;
+    // コメントの移動距離
+    #commentMoveWidth;
     // コメントの x 座標
-    #x0;
+    #xStartPoint;
     // 矩形の削除範囲の始点の x 座標
-    #x1;
+    #xDeleteStartPoint;
     // 矩形の削除範囲の終点の x 座標
-    #x2;
+    #xDeleteEndPoint;
     // コメントの y 座標
-    #y;
+    #yStartPoint;
     // コメントが 1 回の更新でどれだけ進むか
-    #move;
+    #moveSpeed;
     // コメントの縁取りの幅
-    #lineWidth;
+    #commentLineWidth;
     // テキストの端が削除する矩形からはみ出ないようにするため
     #padding;
-    constructor(text, commentWidth, x, commentHeight, index, move, lineWidth) {
-        this.#text = text;
+    constructor(commentString, commentWidth, commentMoveWidth, commentHeight, index, moveSpeed, commentLineWidth) {
+        this.#commentString = commentString;
         this.#commentWidth = commentWidth;
         this.#commentHeight = commentHeight;
-        this.#x0 = x;
-        this.#x1 = x;
-        this.#x2 = x;
-        this.#y = commentHeight * index;
-        this.#move = move;
-        this.#lineWidth = lineWidth;
+        this.#commentMoveWidth = commentMoveWidth;
+        this.#xStartPoint = commentMoveWidth;
+        this.#xDeleteStartPoint = commentMoveWidth;
+        this.#xDeleteEndPoint = commentMoveWidth;
+        this.#yStartPoint = commentHeight * index;
+        this.#moveSpeed = moveSpeed;
+        this.#commentLineWidth = commentLineWidth;
         this.#padding = 5;
     }
 
     render(context) {
-        if (this.#x0 >= document.documentElement.clientWidth) {
-            this.#x2 = this.#x0 + this.#commentWidth + this.#lineWidth;
+        if (this.#xStartPoint >= this.#commentMoveWidth) {
+            this.#xDeleteEndPoint = this.#xStartPoint + this.#commentWidth + this.#commentLineWidth;
         }
         // まず前回の描画を削除する
-        this.#x1 = this.#x0
-        if (this.#x0 <= this.#move) this.#x1 = 0;
-        if (this.#x2 >= 0) {
-            context.clearRect(this.#x1, this.#y, this.#commentWidth + this.#padding+10, this.#commentHeight);
-            // context.fillRect(this.#x0, this.#y, this.#commentWidth + this.#padding, this.#commentHeight);
+        this.#deletePreComment(context);
             this.#moveX();
-            // context.strokeText(this.#text, this.#x0, this.#y + this.#padding);
-            context.fillText(this.#text, this.#x0, this.#y + 2);
-        }
+            context.fillText(this.#commentString, this.#xStartPoint, this.#yStartPoint + 2);
+    }
+
+    #deletePreComment(context) {
+        this.#xDeleteStartPoint = this.#xStartPoint
+        if (this.#xStartPoint <= this.#moveSpeed) this.#xDeleteStartPoint = 0;
+        context.clearRect(this.#xDeleteStartPoint, this.#yStartPoint, this.#commentWidth + this.#padding+10, this.#commentHeight);
     }
 
     #moveX() {
-        this.#x0 -= this.#move;
-        this.#x2 -= this.#move;
+        this.#xStartPoint -= this.#moveSpeed;
+        this.#xDeleteEndPoint -= this.#moveSpeed;
     }
 
-    property() {
-        return { x: this.#x2, move: this.#move }
+    xEndPoint() {
+        return this.#xDeleteEndPoint;
     }
 }
 

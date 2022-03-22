@@ -1,5 +1,5 @@
-import { DisplayProperty } from "./displayProperty.js";
-import { CanvasComment } from './canvasComment.js'
+import { DisplayProperty } from "../displayProperty.js";
+import { CanvasComment } from "./canvasComment.js";
 
 class CanvasState extends DisplayProperty {
     // フレームレート
@@ -40,10 +40,9 @@ class CanvasState extends DisplayProperty {
         const { comment, index } = this.calcCommentRow(this.#measureStringWidth(commentMessage));
         if (!comment) return;
         const { commentMoveWidth, commentHeight } = this.getWindowSize();
-        const moveWidth = commentMoveWidth;
-        const move = comment.speed * 1000 / this.getFps();
+        const commentMoveSpeed = comment.speed * 1000 / this.getFps();
         // if (index < this.getCommentLane() / 2) {
-        this.#commentList.push(new CanvasComment(commentMessage, comment.width, moveWidth, commentHeight, index, move, this.#context.lineWidth));
+        this.#commentList.push(new CanvasComment(commentMessage, comment.width, commentMoveWidth, commentHeight, index, commentMoveSpeed, this.#context.lineWidth));
         // }
     }
 
@@ -53,8 +52,7 @@ class CanvasState extends DisplayProperty {
         // コメントを１フレーム進める処理
         this.#commentList.forEach(comment => {
             // コメントのあった幅だけを削除
-            const { x, move } = comment.property();
-            if (x < 0) this.#commentList.shift();
+            if (comment.xEndPoint() < 0) this.#commentList.shift();
             comment.render(this.#context);
         });
         requestAnimationFrame(() => this.drawNextFrame());
