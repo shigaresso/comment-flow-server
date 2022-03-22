@@ -1,19 +1,8 @@
-const createCanvas = (domId, commentMoveWidth, rowHeight) => {
-    const element = document.createElement("canvas");
-    element.id = domId;
-    element.className = "canvas";
-    element.width = commentMoveWidth;
-    element.height = rowHeight;
-    document.body.appendChild(element);
-}
-
-const calcCommentRow = (rows, width) => {
-    const commentDisplayTime = 5000;
-    const commentMoveWidth = document.documentElement.clientWidth;
-
+const calcCommentRow = (rows, commentMoveWidth, commentWidth, commentDisplayTime) => {
+    // コメントが流せるか判定するためのプロパティ
     const comment = {
         bornTime: Date.now(),
-        width,
+        width: commentWidth,
     };
     comment.speed = (commentMoveWidth + comment.width) / commentDisplayTime;
 
@@ -38,4 +27,4 @@ const calcCommentRow = (rows, width) => {
     }
 }
 
-export { createCanvas, calcCommentRow };
+export { calcCommentRow };
