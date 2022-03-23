@@ -3,6 +3,10 @@ export class BufferCanvas {
     #xPosition;
     // 表示する canvas のための y 座標 (行の index も持って良い)
     #yPosition;
+    // コメントの高さ
+    #commentHeight;
+    // コメントの幅
+    #commentWidth;
     // 配列から削除するかを判定するためのコメント幅
     #deleteJudgePoint;
     // 1 フレームの移動量
@@ -13,6 +17,8 @@ export class BufferCanvas {
     constructor(textString, xPosition, commentHeight, index, commentWidth, moveSpeed, canvasSetting) {
         this.#xPosition = xPosition;
         this.#yPosition = commentHeight * index;
+        this.#commentHeight = commentHeight;
+        this.#commentWidth = commentWidth;
         this.#deleteJudgePoint = -1 * commentWidth;
         this.#moveSpeed = moveSpeed;
         this.#bufferCanvas = this.createBufferCanvas(textString, commentWidth, commentHeight, canvasSetting);
@@ -43,9 +49,9 @@ export class BufferCanvas {
         return { bufferCanvas: this.#bufferCanvas, xPosition: this.#xPosition, yPosition: this.#yPosition }
     }
 
-    // deletePreviewCanvas() {
-    //     return { xPosition: this.#xPosition + this.#moveSpeed, yPosition: this.#yPosition }
-    // }
+    deletePreviewCanvas() {
+        return { preXPosition: this.#xPosition + this.#moveSpeed, preYPosition: this.#yPosition, commentWidth: this.#commentWidth, commentHeight: this.#commentHeight }
+    }
 
     moveComment() {
         this.#xPosition -= this.#moveSpeed;

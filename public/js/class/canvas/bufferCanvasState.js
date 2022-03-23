@@ -21,10 +21,12 @@ export class BufferCanvasState extends CanvasState {
         // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // 配列を逆順にループさせないと、ループ中に削除が入るので削除近辺でチラつく
         for (let i = this.commentList.length-1; i>=0; i--) {
+            const {preXPosition, preYPosition, commentWidth, commentHeight} = this.commentList[i].deletePreviewCanvas();
+            this.context.clearRect(preXPosition, preYPosition, commentWidth, commentHeight);
             this.commentList[i].moveComment();
             const {bufferCanvas, xPosition, yPosition} = this.commentList[i].getBufferCanvas();
             this.context.putImageData(bufferCanvas, xPosition, yPosition);
-            if (xPosition < 2*this.commentList[i].judgeDelete()) this.commentList.splice(i);
+            if (xPosition < this.commentList[i].judgeDelete()) this.commentList.splice(i, 1);
         }
         requestAnimationFrame(() => this.drawNextFrame());
     }
