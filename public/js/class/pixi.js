@@ -2,22 +2,18 @@ import { DisplayProperty } from "./displayProperty.js";
 
 class Comment {
     // コメントの Pixi.js インスタンス
-    #pixiInstance
+    pixiInstance
     // 1 回の更新で移動する量
     #move
 
     constructor(pixiInstance, move) {
-        this.#pixiInstance = pixiInstance; // Text のインスタンス
+        this.pixiInstance = pixiInstance; // Text のインスタンス
         this.#move = move; // 1 フレームの移動量
     }
 
     // フレームの更新処理、画面外にコメントがいった場合、Comment クラスのインスタンスを配列から削除
-    render(receiveInstance) {
-        this.#pixiInstance.position.x -= this.#move;
-        if (this.#pixiInstance.position.x < -this.#pixiInstance.width - 1000) {
-            receiveInstance.getCommentList().shift();
-            return;
-        }
+    render() {
+        this.pixiInstance.position.x -= this.#move;
     }
 }
 
@@ -64,11 +60,22 @@ class Pixi_js extends DisplayProperty {
         this.#commentList.push(new Comment(text, speed))
     }
 
-    drawNextFrame() {
-        this.#commentList.forEach(instance => {
-            instance.render(this);
-        });
+    // drawNextFrame() {
+    //     this.#commentList.forEach(instance => {
+    //         instance.render(this);
+    //     });
 
+    //     // 関数内は bind させるか無名関数で書かないとエラーになる
+    //     requestAnimationFrame(() => this.drawNextFrame());
+    // }
+
+    drawNextFrame() {
+        for (let i = this.#commentList.length-1; i>=0; i--) {
+            this.#commentList[i].render(this);
+            if (this.#commentList[i].pixiInstance.position.x < -this.#commentList[i].pixiInstance.width - 1000) {
+                this.#commentList.splice(i, 1);
+            }
+        }
         // 関数内は bind させるか無名関数で書かないとエラーになる
         requestAnimationFrame(() => this.drawNextFrame());
     }
