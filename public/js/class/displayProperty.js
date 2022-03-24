@@ -26,6 +26,7 @@ class DisplayProperty {
         this.#commentDisplayTime = commentDisplayTime;
         this.#socket = io();
         this.#setWindowSize();
+        this.connectSocketIoServer();
     }
 
     #setWindowSize() {

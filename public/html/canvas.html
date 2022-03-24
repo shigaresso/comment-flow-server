@@ -12,14 +12,11 @@
 <body>
     <script type="module">
         import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+        import { canvasSetting } from "../js/setting/notWorkerSetting.js";
         import { createCanvas, CanvasState } from "../js/class/canvas/canvas.js";
 
         createCanvas("placeholder", document.documentElement.clientWidth, document.documentElement.clientHeight);
-        const instance = new CanvasState(rowCount, commentDisplayTime);
-
-        instance.connectSocketIoServer();
-        
-        requestAnimationFrame(() => instance.drawNextFrame());
+        const instance = new CanvasState(rowCount, commentDisplayTime, canvasSetting);
     </script>
 </body>
 

@@ -2,9 +2,9 @@ import { DisplayProperty } from "./displayProperty.js";
 
 class Comment {
     // コメントの Pixi.js インスタンス
-    pixiInstance
+    pixiInstance;
     // 1 回の更新で移動する量
-    #move
+    #move;
 
     constructor(pixiInstance, move) {
         this.pixiInstance = pixiInstance; // Text のインスタンス
@@ -52,12 +52,13 @@ class Pixi_js extends DisplayProperty {
         const { comment, index } = this.calcCommentRow(text.width);
         if (!comment) return;
         const { commentMoveWidth, commentHeight } = this.getWindowSize();
-        text.position.x = commentMoveWidth // scoreText の x 座標
-        text.position.y = commentHeight * index // scoreText の y 座標
-        this.#app.stage.addChild(text)
-        const speed = Math.floor(comment.speed * 1000 / this.getFps())
-        console.log(speed)
-        this.#commentList.push(new Comment(text, speed))
+        text.position.x = commentMoveWidth; // scoreText の x 座標
+        text.position.y = commentHeight * index; // scoreText の y 座標
+        this.#app.stage.addChild(text);
+        const speed = Math.floor(comment.speed * 1000 / this.getFps());
+        console.log(speed);
+        this.#commentList.push(new Comment(text, speed));
+        this.drawNextFrame();
     }
 
     // drawNextFrame() {

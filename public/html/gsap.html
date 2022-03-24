@@ -11,12 +11,10 @@
     <span id="ruler"></span>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
-    <script src="../js/setting.js"></script>
     <script type="module">
         import { Gsap } from "../js/class/gsap.js";
-        const instance = new Gsap(row, commentDisplayTime);
-
-        instance.connectSocketIoServer();
+        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+        const instance = new Gsap(rowCount, commentDisplayTime);
     </script>
 </body>
 

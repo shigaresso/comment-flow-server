@@ -38,6 +38,7 @@ class CanvasState extends DisplayProperty {
 
         this.#fps = 60;
         this.commentList = [];
+        this.drawNextFrame();
     }
 
     measureStringWidth(comment) {

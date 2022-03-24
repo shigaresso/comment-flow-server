@@ -18,10 +18,6 @@
 
         createCanvas("placeholder", document.documentElement.clientWidth, document.documentElement.clientHeight);
         const instance = new BufferCanvasState(rowCount, commentDisplayTime, canvasSetting);
-
-        instance.connectSocketIoServer();
-        
-        requestAnimationFrame(() => instance.drawNextFrame());
     </script>
 </body>
 

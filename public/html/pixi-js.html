@@ -24,14 +24,10 @@
     <div id="placeholder"></div>
     <script type="module">
         import { Pixi_js } from "../js/class/pixi.js";
-        import { rowCount, rowHeight, commentDisplayTime } from "../js/setting.js";
+        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+        import { rowHeight } from "../js/setting/notWorkerSetting.js";
 
         const instance = new Pixi_js(rowCount, commentDisplayTime, rowHeight);
-
-        instance.connectSocketIoServer();
-
-        // 関数内は bind させるか無名関数で書かないとエラーになる
-        requestAnimationFrame(() => instance.drawNextFrame());
     </script>
 </body>
 
