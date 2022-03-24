@@ -12,7 +12,7 @@ export const canvasSetting = {
     textBaseline: "top",
     textAlign: "start",
     lineWidth: "13",
-    font: `900 ${rowHeight}px Segoe UI Emoji`,
     fillStyle: "white",
     lineJoin: "round", // 縁取り部分のテキストを尖らないようにする
 }
+canvasSetting.font = `900 ${rowHeight - 2 * canvasSetting.lineWidth}px Segoe UI Emoji`;
