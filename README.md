@@ -65,6 +65,8 @@ https://github.com/shigaresso/send-comment-from-browser
 配信のブラウザのタブをバックグラウンドにするとコメントの送信が中断される場合があるため、バックグラウンドにしないように注意して下さい。  
 
 ## ブランチのバージョンについて
+- ver 6.0  
+コメントの canvas を 1 回目だけ描画するようにした buffer canvas の追加。  
 - ver 5.8  
 コメント 1 行ずつを Web Worker 上の canvas で処理するようにした。  
 - ver 5.7  
