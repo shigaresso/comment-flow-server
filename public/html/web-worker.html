@@ -10,23 +10,7 @@
     <div id="placeholder"></div>
     <!-- 要素の幅を取得するために利用するDOM -->
     <span id="ruler"></span>
-    <script type="module">
-        import { WebWorker } from "../js/class/webWorker.js";
-        import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
-
-        const instance = new WebWorker(rowCount, commentDisplayTime);
-        
-        instance.myWorker.onmessage = e => {
-            const {strMessage, index} = e.data;
-            const div_text = document.createElement("div");
-            div_text.className = "comment";
-            const placeholder = document.getElementById(`row${index}`);
-            div_text.innerText = strMessage;
-            placeholder.appendChild(div_text);
-
-            div_text.addEventListener("animationend", () => div_text.remove());
-        }
-    </script>
 </body>
+<script src="../js/setting/selectUrl.js" type="module"></script>
 
 </html>
