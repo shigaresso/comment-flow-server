@@ -7,14 +7,14 @@ const commentList = [];
 const fps = 60;
 
 onmessage = event => {
-    const { pattern, canvas, canvasSetting, comment, strMessage, commentWidth } = event.data;
     /*
      * メインスレッドから、OffscreenCanvas を受け取る
      * この行以降 offscreenCanvas 変数は通常の canvas と同様の処理が出来る
      */
 
-    switch (pattern) {
+    switch (event.data.pattern) {
         case "constructor":
+            const { canvas, canvasSetting } = event.data;
             offscreenCanvas = canvas;
             // CanvasRenderingContext2D を取得する(引数を webgl にすれば webgl を利用出来る)
             context = offscreenCanvas.getContext("2d");
@@ -28,6 +28,7 @@ onmessage = event => {
             context.lineJoin = canvasSetting.lineJoin;
             break;
         case "receiveComment":
+            const { comment, strMessage, commentWidth } = event.data;
             const { speed } = comment;
             createComment(strMessage, commentWidth, speed);
             break;
