@@ -74,6 +74,11 @@ app.get("/buffer-canvas", (req, res) => {
     res.sendFile(`${__dirname}/public/html/buffer-canvas.html`);
 });
 
+app.get("/buffer-multi", (req, res) => {
+    console.log("buffer-multi へのアクセスがありました")
+    res.sendFile(`${__dirname}/public/html/buffer-multi.html`);
+});
+
 app.get("/canvas", (req, res) => {
     console.log("canvas へのアクセスがありました")
     res.sendFile(`${__dirname}/public/html/canvas.html`);
@@ -113,6 +118,7 @@ app.get("/web-worker", (req, res) => {
 // サーバーの起動
 server.listen(port, () => {
     console.log(`listening on http://localhost:${port}/buffer-canvas/`);
+    console.log(`listening on http://localhost:${port}/buffer-multi/`);
     console.log(`listening on http://localhost:${port}/canvas/`);
     console.log(`listening on http://localhost:${port}/canvas-multi/`);
     console.log(`listening on http://localhost:${port}/css/`);

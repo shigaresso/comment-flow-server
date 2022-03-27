@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/canvas.css">
+    <style type="text/css">
+        #ruler {
+            /* これによって offscreenCanvas の上に ruler canvas を被せることが出来る */
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body></body>
+<script type="module">
+    import { io } from "/socket.io-client/socket.io.esm.min.js";
+    import { createCanvas } from "../js/class/canvas/canvas.js";
+    import { calcCommentRow } from "../js/class/canvas/canvas-multi/canvasMulti.js";
+    import { rowCount, commentDisplayTime } from "../js/setting/setting.js";
+    import { rowHeight, commentMoveWidth, canvasSetting } from "../js/setting/notWorkerSetting.js";
+
+    // コメント幅を調べるための canvas を作成
+    createCanvas("ruler", commentMoveWidth, rowHeight);
+    // コメントを流すための canvas 用の HTML を作成
+    for (let i = 0; i < rowCount; i++) {
+        createCanvas(`myCanvas${i}`, commentMoveWidth, rowHeight);
+    }
+
+    const canvas = document.getElementById('ruler');
+    const context = canvas.getContext('2d');
+
+    // ここで ruler 用の canvas の設定をする
+    context.textBaseline = canvasSetting.textBaseline;
+    context.textAlign = canvasSetting.textAlign;
+    context.lineWidth = canvasSetting.lineWidth;
+    context.font = canvasSetting.font;
+    context.fillStyle = canvasSetting.fillStyle;
+    context.lineJoin = canvasSetting.lineJoin;
+
+    // Worker インスタンスを保持する配列
+    const workers = [];
+    for (let i = 0; i < rowCount; i++) {
+        // canvas 要素の取得
+        const canvas = document.getElementById(`myCanvas${i}`);
+        console.log(canvas);
+        // canvas 要素の描画コントロールを OffscreenCanvas に委譲する
+        const offscreenCanvas = canvas.transferControlToOffscreen();
+
+        // worker を作成し、そこに OffscreenCanvas を渡す (第二引数をこのように渡すことで、Web Worker 用のファイルでモジュールをインポート出来る)
+        workers.push(new Worker("../js/class/canvas/canvas-multi/bufferWorker.js", { type: "module" }))
+        workers[i].postMessage({ pattern: "constructor", canvas: offscreenCanvas, canvasSetting: canvasSetting }, [offscreenCanvas]);
+    }
+
+    // 各行にコメントを流せるかどうかのプロパティ
+    const rows = Array(rowCount)
+        .fill()
+        .map(_ => ({
+            bornTime: 0,
+            speed: 0,
+            width: 0,
+        }));
+
+    const socket = io();
+    socket.on('connect', () => {
+        console.log("socket.ioに接続しました");
+    });
+    socket.on('spread message', (strMessage) => {
+        // OPENRECのコメントがスタンプの場合は処理しない
+        if (strMessage.length == 0) return;
+
+        const commentWidth = context.measureText(strMessage).width;
+        const { index, comment } = calcCommentRow(rows, commentMoveWidth, commentWidth, commentDisplayTime);
+        if (!comment) return;
+        // console.log(index);
+
+        // 送信する canvas の作成
+        const offScreen = document.createElement("canvas");
+        offScreen.width = commentWidth;
+        offScreen.height = rowHeight;
+        const setContext = offScreen.getContext("2d");
+        setContext.textBaseline = canvasSetting.textBaseline;
+        setContext.textAlign = canvasSetting.textAlign;
+        setContext.lineWidth = canvasSetting.lineWidth;
+        setContext.font = canvasSetting.font;
+        setContext.fillStyle = canvasSetting.fillStyle;
+        setContext.lineJoin = canvasSetting.lineJoin;
+        setContext.fillText(strMessage, 0, 0);
+        const imageData = setContext.getImageData(0, 0, commentWidth, rowHeight);
+        const sendOffscreenCanvas = {
+            imageData: imageData,
+            xPoint: commentMoveWidth,
+            commentWidth: commentWidth,
+            deleteCommentPosition: -1 * commentWidth,
+            commentMoveSpeed: comment.speed * 1000 / 60,
+        } 
+        workers[index].postMessage({ pattern: "receiveComment", sendOffscreenCanvas });
+    });
+
+</script>
+<!-- <script src="../js/setting/selectUrl.js" type="module"></script> -->
+
+</html>
