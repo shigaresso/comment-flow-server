@@ -43,7 +43,7 @@ npm i
 を実行し、その後、  
 
 ```zsh
-npm start
+npm run start
 ```
 
 を実行します。  
