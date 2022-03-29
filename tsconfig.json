@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "es6",
