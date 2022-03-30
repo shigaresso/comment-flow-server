@@ -34,13 +34,13 @@ https://github.com/shigaresso/react-comment-layout
 
 ## 利用方法  
 
-リポジトリをダウンロードした後、プログラムフォルダのルート直下のターミナルで  
+リポジトリをダウンロードした後、プログラムフォルダの client、server それぞれのターミナルで  
 
 ```zsh
 npm i
 ```
 
-を実行し、その後、  
+を実行し、その後、server フォルダ内で  
 
 ```zsh
 npm run start
@@ -58,7 +58,7 @@ listening on http://localhost:10010/pixi-js/
 listening on http://localhost:10010/web-worker/
 ```
 
-とターミナルに表示されるので好きな URL をブラウザで表示して下さい。  
+などとターミナルに表示されるので好きな URL をブラウザで表示して下さい。  
 
 https://github.com/shigaresso/send-comment-from-browser  
 が正常に動作している場合、先ほど選んだ URL のブラウザに配信のコメントが流れ出します。  
