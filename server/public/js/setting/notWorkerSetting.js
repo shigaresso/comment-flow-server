@@ -11,7 +11,7 @@ export const commentMoveWidth = document.documentElement.clientWidth;
 export const canvasSetting = {
     textBaseline: "top",
     textAlign: "start",
-    lineWidth: "13",
+    lineWidth: "0",
     fillStyle: "white",
     lineJoin: "round", // 縁取り部分のテキストを尖らないようにする
 }

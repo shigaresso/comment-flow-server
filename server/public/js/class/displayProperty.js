@@ -74,8 +74,10 @@ class DisplayProperty {
             const timeLag = comment.bornTime - row.bornTime;
             const rowCommentRightSide = row.speed * timeLag - row.width
             const collisionWidth = relativeSpeed * (commentDisplayTime - timeLag) - rowCommentRightSide;
+            const isNotCommentNow = timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0;
+            const isFinalLane = index == this.#rows.length - 1;
             // 行にコメントが存在していないか コメントが行の右側まで出ていて、衝突しない時
-            if (timeLag >= commentDisplayTime || rowCommentRightSide >= 0 && collisionWidth <= 0) {
+            if (isNotCommentNow) {
                 // 次、この行にコメントが流れる為の条件についての情報
                 this.#rows[index] = comment;
                 return {
@@ -83,7 +85,7 @@ class DisplayProperty {
                     index,
                 };
             }
-            if (index == this.#rows.length - 1) {
+            if (isFinalLane) {
                 console.log("コメントを流せませんでした");
                 return { comment: null };
             }
