@@ -34,17 +34,18 @@ class Pixi_js extends DisplayProperty {
 
         this.#style = new PIXI.TextStyle({
             textBaseline: "bottom", // 高さの変更が出来る
-            fontFamily: "Segoe UI Emoji, MS P ゴシック",
+            fontFamily: "Segoe UI Emoji, MS PGothic",
             fontSize: rowHeight,
             fontWeight: 900,
             fill: 0xFFFFFF, // テキストの色
-            strokeThickness: Math.round(rowHeight / 5), // テキストの縁取りの幅
+            // strokeThickness: Math.round(rowHeight / 5), // テキストの縁取りの幅
             lineJoin: "round", // 縁取りの結合部
             stroke: 0x000000, // テキストの縁取りの色
         });
 
         this.#commentList = [];
         this.#fps = 60;
+        this.drawNextFrame();
     }
 
     createComment(commentMessage) {
@@ -58,31 +59,18 @@ class Pixi_js extends DisplayProperty {
         const speed = Math.floor(comment.speed * 1000 / this.getFps());
         console.log(speed);
         this.#commentList.push(new Comment(text, speed));
-        this.drawNextFrame();
     }
 
-    // drawNextFrame() {
-    //     this.#commentList.forEach(instance => {
-    //         instance.render(this);
-    //     });
-
-    //     // 関数内は bind させるか無名関数で書かないとエラーになる
-    //     requestAnimationFrame(() => this.drawNextFrame());
-    // }
 
     drawNextFrame() {
         for (let i = this.#commentList.length-1; i>=0; i--) {
             this.#commentList[i].render(this);
-            if (this.#commentList[i].pixiInstance.position.x < -this.#commentList[i].pixiInstance.width - 1000) {
+            if (this.#commentList[i].pixiInstance.position.x < -this.#commentList[i].pixiInstance.width) {
                 this.#commentList.splice(i, 1);
             }
         }
         // 関数内は bind させるか無名関数で書かないとエラーになる
         requestAnimationFrame(() => this.drawNextFrame());
-    }
-
-    getCommentList() {
-        return this.#commentList;
     }
 
     getFps() {
