@@ -68,7 +68,7 @@ class CanvasState extends DisplayProperty {
 
     drawNextFrame() {
         // Canvas 画面のクリア
-        // this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // コメントを１フレーム進める処理
         for (let i = this.commentList.length-1; i>=0; i--) {
             this.commentList[i].render(this.context);

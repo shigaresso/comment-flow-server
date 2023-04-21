@@ -44,7 +44,7 @@ class CanvasComment {
 
     render(context) {
         // まず前回の描画を削除する
-        this.#deletePreComment(context);
+        // this.#deletePreComment(context);
         this.#moveX();
         context.fillText(this.#commentString, this.#xStartPoint, this.#yStartPoint + 2);
     }
